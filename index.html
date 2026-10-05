@@ -917,6 +917,7 @@ async function fetchProfile(){
   }catch(e){}
 }
 async function refreshAfterAuth(){
+  S.oauthError=null;
   await fetchProfile(); updatePremium(); await refreshDisabled();
   await loadMyUploads(); await loadPending(); renderAccount();
 }
@@ -948,6 +949,10 @@ function renderAuth(){
     +'<div class="hr"></div><p class="note center">'+t("or")+'</p>'
     +'<button class="btn ghost" id="aGoogle">'+t("contGoogle")+'</button>'
     +'<p class="note" id="aNote"></p>';
+  if(S.oauthError){
+    const w=document.createElement("p"); w.className="note"; w.style.color="var(--red)"; w.style.fontWeight="700";
+    w.textContent="⚠ "+S.oauthError; d.prepend(w);
+  }
   box.appendChild(d);
   d.querySelector("#amIn").addEventListener("click",()=>{authMode="in";renderAuth();});
   d.querySelector("#amUp").addEventListener("click",()=>{authMode="up";renderAuth();});
@@ -1221,6 +1226,15 @@ function setLang(l){ lang=l; localStorage.setItem("egs_lang",l); applyI18n(); re
 /* ================= AUTH INIT ================= */
 async function initAuth(){
   try{
+    const qp=new URLSearchParams(location.search);
+    const oerr=qp.get("error");
+    if(oerr){
+      S.oauthError=(qp.get("error_description")||oerr).replace(/\+/g," ");
+      try{ history.replaceState(null,"",location.pathname); }catch(e){}
+      toast("⚠ "+S.oauthError);
+    }
+  }catch(e){}
+  try{
     const {data}=await supa.auth.getSession();
     if(data&&data.session){ S.user=data.session.user; await refreshAfterAuth(); }
     else { isPremium=false; }
@@ -1239,11 +1253,6 @@ renderLibrary();
 renderAccount();
 if(supa){ initAuth(); loadApproved(); }
 else { $("#homeCommunity").innerHTML='<p class="muted">'+t("serverDown")+'</p>'; }
-</script>
-<script>
-if("serviceWorker" in navigator){
-  window.addEventListener("load",()=>{ navigator.serviceWorker.register("sw.js").catch(()=>{}); });
-}
 </script>
 </body>
 </html>
