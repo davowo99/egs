@@ -345,32 +345,7 @@ function applyI18n(){
 
 /* ================= BUILT-IN HYMNS (public domain) ================= */
 /* Melodies are simple original synthesized arrangements (midi, beats). */
-const HYMNS = [
-{ id:"hymn-amazing", title:"Amazing Grace", artist:"Public Domain Hymn", hue:45,
-  bpm:84,
-  mel:[[67,1],[72,1],[71,2],[69,1],[67,1],[69,2],[67,1],[64,2],
-       [62,1],[67,1],[72,2],[71,1],[69,1],[67,2],[64,3],
-       [67,1],[72,1],[71,2],[72,1],[74,1],[72,2],[71,1],[69,2],
-       [67,1],[72,1],[71,2],[69,1],[67,1],[69,2],[67,3]],
-  bass:[[43,3],[48,3],[43,3],[50,3],[43,3],[50,3],[43,3],[48,3],[50,3],[43,3],[50,3],[43,3]],
-  lyrics:"Amazing grace! how sweet the sound,\nThat saved a wretch like me!\nI once was lost, but now am found,\nWas blind, but now I see.\n\n'Twas grace that taught my heart to fear,\nAnd grace my fears relieved;\nHow precious did that grace appear\nThe hour I first believed!\n\nThrough many dangers, toils, and snares,\nI have already come;\n'Tis grace hath brought me safe thus far,\nAnd grace will lead me home." },
-{ id:"hymn-holy", title:"Holy, Holy, Holy", artist:"Public Domain Hymn", hue:210,
-  bpm:96,
-  mel:[[65,1],[69,1],[72,1],[74,1],[72,2],[72,2],[69,1],[69,1],[67,2],[67,2],
-       [65,1],[69,1],[72,1],[74,1],[77,2],[77,2],[76,1],[74,1],[72,2],[72,2],
-       [77,1],[77,1],[76,1],[74,1],[72,2],[72,2],[74,1],[74,1],[72,2],[69,2],
-       [65,1],[69,1],[72,1],[74,1],[72,2],[69,2],[67,1],[65,1],[65,4]],
-  bass:[[41,4],[46,4],[41,4],[48,4],[41,4],[46,4],[43,4],[48,4],[46,4],[46,4],[41,4],[48,4],[41,4],[48,4],[41,4],[41,4]],
-  lyrics:"Holy, holy, holy! Lord God Almighty!\nEarly in the morning our song shall rise to Thee;\nHoly, holy, holy! merciful and mighty!\nGod in three Persons, blessed Trinity!\n\nHoly, holy, holy! All the saints adore Thee,\nCasting down their golden crowns around the glassy sea;\nCherubim and seraphim falling down before Thee,\nWho wert, and art, and evermore shalt be.\n\nHoly, holy, holy! though the darkness hide Thee,\nThough the eye of sinful man Thy glory may not see;\nOnly Thou art holy; there is none beside Thee,\nPerfect in power, in love, and purity." },
-{ id:"hymn-blessed", title:"Blessed Assurance", artist:"Public Domain Hymn", hue:150,
-  bpm:100,
-  mel:[[62,1],[66,1],[69,2],[71,1],[69,1],[66,2],[64,1],[62,3],
-       [62,1],[66,1],[69,2],[71,1],[73,1],[71,2],[69,1],[66,3],
-       [69,1],[69,1],[71,2],[73,1],[71,1],[69,2],[66,1],[64,1],[62,1],
-       [62,1],[64,1],[66,2],[66,1],[64,1],[62,2],[62,3]],
-  bass:[[38,3],[38,3],[43,3],[38,3],[38,3],[38,3],[45,3],[38,3],[43,3],[43,3],[38,3],[45,3],[38,3],[45,3],[38,3],[38,3]],
-  lyrics:"Blessed assurance, Jesus is mine!\nO what a foretaste of glory divine!\nHeir of salvation, purchase of God,\nBorn of His Spirit, washed in His blood.\n\nThis is my story, this is my song,\nPraising my Savior all the day long;\nThis is my story, this is my song,\nPraising my Savior all the day long.\n\nPerfect submission, perfect delight,\nVisions of rapture now burst on my sight;\nAngels descending bring from above\nEchoes of mercy, whispers of love.\n\nThis is my story, this is my song,\nPraising my Savior all the day long;\nThis is my story, this is my song,\nPraising my Savior all the day long." }
-];
+const HYMNS = [];
 HYMNS.forEach(h=>{ h.kind="synth"; h.source="builtin";
   const ev=[]; let b=0;
   h.mel.forEach(([m,beats])=>{ ev.push({b:b,m:m,d:beats,k:"lead"}); b+=beats; });
@@ -1165,15 +1140,20 @@ function renderMyUploadsBox(){
   const box=$("#myUploads"); box.innerHTML="";
   if(!supa||!S.user||!S.myUploads.length) return;
   const d=document.createElement("div"); d.className="card";
-  d.innerHTML='<h3>'+t("myUploads")+'</h3>';
+  const open=Store.get("egs_mu_open",false);
+  const h=document.createElement("h3"); h.style.cursor="pointer";
+  h.innerHTML='📤 '+t("myUploads")+' <span style="float:right">'+(open?'▾':'▸')+'</span>';
+  d.appendChild(h);
+  const body=document.createElement("div"); body.style.display=open?"":"none";
   const cls={pending:"p",approved:"a",rejected:"r"};
   const lbl={pending:t("stPending"),approved:t("stApproved"),rejected:t("stRejected")};
   S.myUploads.forEach(r=>{
     const row=document.createElement("div"); row.className="kv";
     row.innerHTML='<span><b style="color:var(--txt)">'+esc(r.title)+'</b><br>'+esc(r.artist_name||"")+'</span><span class="pill '+(cls[r.status]||"p")+'">'+lbl[r.status]+'</span>';
-    d.appendChild(row);
+    body.appendChild(row);
   });
-  box.appendChild(d);
+  d.appendChild(body); box.appendChild(d);
+  h.addEventListener("click",()=>{ Store.set("egs_mu_open",!open); renderMyUploadsBox(); });
 }
 async function doGrantPremium(days){
   const box=$("#adminBox");
@@ -1225,17 +1205,23 @@ function renderAdminBox(){
   p.querySelector("#gp365").addEventListener("click",()=>doGrantPremium(365));
   /* manage songs (admin delete) */
   const mbox=document.createElement("div"); mbox.className="card";
-  mbox.innerHTML='<h3>🗑 '+t("manageSongs")+' ('+S.sbSongs.length+')</h3>';
-  if(!S.sbSongs.length) mbox.innerHTML+='<p class="muted">'+t("noSongs")+'</p>';
+  const mOpen=Store.get("egs_ms_open",false);
+  const mh=document.createElement("h3"); mh.style.cursor="pointer";
+  mh.innerHTML='🗑 '+t("manageSongs")+' ('+S.sbSongs.length+') <span style="float:right">'+(mOpen?'▾':'▸')+'</span>';
+  mbox.appendChild(mh);
+  const mb=document.createElement("div"); mb.style.display=mOpen?"":"none";
+  if(!S.sbSongs.length) mb.innerHTML='<p class="muted">'+t("noSongs")+'</p>';
   S.sbSongs.forEach(r=>{
     const row=document.createElement("div"); row.className="kv";
     row.innerHTML='<span><b style="color:var(--txt)">'+esc(r.title)+'</b><br>'+esc(r.artist_name||"")+'</span>';
     const del=document.createElement("button"); del.className="btn small ghost"; del.textContent="🗑 "+t("delete");
     del.addEventListener("click",()=>deleteSong(r.id,r.audio_url));
     const wrap=document.createElement("span"); wrap.appendChild(del); row.appendChild(wrap);
-    mbox.appendChild(row);
+    mb.appendChild(row);
   });
+  mbox.appendChild(mb);
   box.appendChild(mbox);
+  mh.addEventListener("click",()=>{ Store.set("egs_ms_open",!mOpen); renderAdminBox(); });
 }
 async function setStatus(id,status){
   try{
