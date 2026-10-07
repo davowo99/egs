@@ -38,6 +38,10 @@ input,select,textarea{font-family:inherit}
 .hcard .cv{position:absolute;inset:0}
 .hcard .lb{position:absolute;left:10px;right:10px;bottom:8px;font-size:13px;font-weight:700;text-shadow:0 1px 6px rgba(0,0,0,.7)}
 .hcard .lb small{display:block;font-weight:400;color:#b3b3b3;font-size:11px}
+.artcard{flex:0 0 132px;border:0;background:none;text-align:left;color:var(--txt);padding:0;cursor:pointer}
+.artcard .art{width:132px;height:132px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:44px;font-weight:800;color:#fff8;overflow:hidden;border:1px solid var(--line)}
+.artcard .t{display:block;font-size:13px;font-weight:700;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.artcard .a{display:block;font-size:11px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* song rows */
 .srow{display:flex;align-items:center;gap:12px;padding:9px 6px;border-radius:12px;width:100%;background:none;border:0;color:var(--txt);text-align:left}
 .srow:active{background:var(--card)}
@@ -161,12 +165,76 @@ body.is-playing #mpPlay{animation:glowPulse 2.4s ease-in-out infinite}
 .icobtn.pop{animation:pop .35s ease}
 .loading{background:linear-gradient(90deg,var(--card2) 25%,#2a2a2a 50%,var(--card2) 75%);background-size:200% 100%;animation:shimmer 1.3s linear infinite;color:transparent!important;border-radius:8px;pointer-events:none}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ===== Spotify-style theme ===== */
+:root{--bg:#121212;--card:#181818;--card2:#2a2a2a;--gold:#1ed760;--gold2:#1ed760;--line:#2f2f2f}
+#phone{background:#121212 linear-gradient(180deg,#1d6b43,#121212) no-repeat top/100% 400px}
+svg{fill:currentColor}
+#topbar{padding:calc(16px + env(safe-area-inset-top)) 16px 8px}
+.logo{width:40px;height:40px;border-radius:50%;background:none;padding:0}
+.logo svg{width:100%;height:100%}
+#topbar .tt b{font-size:20px;font-weight:800;letter-spacing:-.3px}
+#greet{font-size:28px!important;letter-spacing:-.5px}
+.sec-t{font-size:21px;font-weight:800;letter-spacing:-.3px;margin:24px 0 12px}
+.hcard,.artcard .art{border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,.4)}
+.hcard{border:0}
+.artcard .art{border:0}
+.cover{border-radius:6px}
+.cover::after,#fpCover::after{display:none}
+.srow{padding:8px 4px}
+.srow .mi b{font-size:15px;font-weight:700}
+.icobtn{padding:6px}
+.icobtn svg{width:22px;height:22px;display:block}
+.icobtn.fav{color:#1ed760}
+#searchInput{background:#fff;color:#000;border:0;border-radius:8px;font-weight:600;padding:14px}
+#searchInput::placeholder{color:#727272}
+.card{border:0;border-radius:10px;background:#181818}
+.btn{border-radius:500px;color:#000;font-weight:800}
+.btn.ghost{background:transparent;color:#fff;border:1px solid #727272}
+.seg button.on,.copyrow button{color:#000}
+.plan{background:linear-gradient(135deg,rgba(30,215,96,.28),#181818);border:0}
+.copyrow{border-color:#1ed760}
+#toast{background:#fff;color:#000;font-weight:700;border:0;bottom:calc(150px + env(safe-area-inset-bottom))}
+/* tab bar */
+#tabbar{background:linear-gradient(180deg,rgba(18,18,18,0),rgba(0,0,0,.96) 38%);border-top:0}
+#tabbar button{color:#b3b3b3;font-weight:600}
+#tabbar button.on{color:#fff}
+#tabbar .ti svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#tabbar button.on .ti svg{stroke-width:2.7}
+/* mini player */
+#mp{bottom:calc(66px + env(safe-area-inset-bottom));border:0;border-radius:8px;background:#3a3a3a;padding:8px 10px 11px}
+#mpPlay{background:#fff;color:#000;display:flex;align-items:center;justify-content:center}
+#mpPlay svg{width:20px;height:20px}
+body.is-playing #mpPlay{animation:none}
+#mpBar{position:absolute;left:10px;right:10px;bottom:4px;height:2px;border-radius:2px;background:rgba(255,255,255,.2);overflow:hidden}
+#mpBar i{display:block;height:100%;width:0;background:#fff}
+/* full player */
+#fp{padding-top:calc(14px + env(safe-area-inset-top))}
+#fpTop button{display:flex}
+#fpTop svg{width:26px;height:26px}
+#fpTop span{letter-spacing:1px;font-weight:700}
+body.is-playing #fpCover{animation:none}
+#fpCover{width:min(340px,82vw);border-radius:8px;box-shadow:0 16px 48px rgba(0,0,0,.55)}
+#fpTitle,#fpArtist{text-align:left}
+#fpTitle{font-size:24px;letter-spacing:-.4px}
+#fpSeek{-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:#535353;outline:0;margin:8px 0}
+#fpSeek::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:#fff}
+#fpSeek::-moz-range-thumb{width:13px;height:13px;border:0;border-radius:50%;background:#fff}
+#fpCtrls{gap:30px}
+#fpCtrls button{display:flex;align-items:center;justify-content:center}
+#fpCtrls svg{width:28px;height:28px}
+#fpPlayB{background:#fff!important;color:#000!important;display:flex;align-items:center;justify-content:center}
+#fpPlayB svg{width:30px;height:30px}
+#fpRepeat svg{width:24px;height:24px}
+#fpLyrics{background:linear-gradient(160deg,#1f8a52,#14563a);border:0;border-radius:14px;padding:18px;font-size:19px;font-weight:700;line-height:1.55;color:#fff}
+#fpLyrics b{display:block;color:rgba(255,255,255,.7);font-size:13px;margin-bottom:6px}
+.shbtn svg{width:20px;height:20px}
 </style>
 </head>
 <body>
 <div id="phone">
   <header id="topbar">
-    <div class="logo">EGS</div>
+    <div class="logo"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#1ed760"/><g fill="#000"><rect x="9" y="17" width="4" height="10" rx="2"/><rect x="15" y="10" width="4" height="22" rx="2"/><rect x="21" y="14" width="4" height="14" rx="2"/><rect x="27" y="19" width="4" height="6" rx="2"/></g></svg></div>
     <div class="tt"><b>EGS</b><span data-i18n="tagline">Ethiopian Gospel Music</span></div>
   </header>
 
@@ -178,7 +246,9 @@ body.is-playing #mpPlay{animation:glowPulse 2.4s ease-in-out infinite}
           <span style="display:flex;gap:6px;align-items:center"><button class="btn small" id="installBtn" data-i18n="install" style="margin:0;width:auto;padding:8px 16px">Install</button><button class="icobtn" id="installX">✕</button></span>
         </div>
       </div>
-      <h2 id="greet" style="font-size:20px;margin:6px 0 2px"></h2>
+      <h2 id="greet" style="font-size:24px;font-weight:800;margin:6px 0 2px"></h2>
+      <div class="sec-t"><span data-i18n="newUploads">New uploads</span></div>
+      <div class="hrow" id="homeNewRow"></div>
       <div class="sec-t"><span data-i18n="playlists">Playlists</span></div>
       <div class="hrow" id="homePlRow"></div>
       <div class="sec-t"><span data-i18n="hymnsTitle">Songs</span></div>
@@ -206,6 +276,7 @@ body.is-playing #mpPlay{animation:glowPulse 2.4s ease-in-out infinite}
       <div id="uploadBox"></div>
       <div id="myUploads"></div>
       <div id="adminBox"></div>
+      <div id="premBox"></div>
       <div id="supportBox"></div>
       <div id="extrasBox"></div>
     </section>
@@ -215,31 +286,32 @@ body.is-playing #mpPlay{animation:glowPulse 2.4s ease-in-out infinite}
     <div class="cover" id="mpCover">♪</div>
     <div class="mi"><b id="mpTitle"></b><span id="mpArtist"></span></div>
     <span class="eq"><i></i><i></i><i></i><i></i></span>
-    <button id="mpPlay">▶</button>
+    <button id="mpPlay"><svg viewBox="0 0 24 24" aria-hidden="true" ><path d="M8 5v14l11-7z"/></svg></button><div id="mpBar"><i></i></div>
   </div>
 
   <nav id="tabbar">
-    <button data-tab="home" class="on"><span class="ti">⌂</span><span data-i18n="home">Home</span></button>
-    <button data-tab="search"><span class="ti">⌕</span><span data-i18n="search">Search</span></button>
-    <button data-tab="library"><span class="ti">♫</span><span data-i18n="library">Library</span></button>
-    <button data-tab="account"><span class="ti">◉</span><span data-i18n="account">Account</span></button>
+    <button data-tab="home" class="on"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true" ><path d="M3 11l9-8 9 8v10h-6v-6H9v6H3z"/></svg></span><span data-i18n="home">Home</span></button>
+    <button data-tab="search"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true" ><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></span><span data-i18n="search">Search</span></button>
+    <button data-tab="library"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true" ><path d="M4 4v16M9 4v16M14 6l5 14"/></svg></span><span data-i18n="library">Library</span></button>
+    <button data-tab="account"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true" ><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></span><span data-i18n="account">Account</span></button>
   </nav>
 
   <div id="fp" hidden>
-    <div id="fpTop"><button id="fpClose">﹀</button><span data-i18n="nowPlaying">NOW PLAYING</span><button id="fpMore">⋯</button></div>
+    <div id="fpTop"><button id="fpClose"><svg viewBox="0 0 24 24" aria-hidden="true" ><path d="M5 9l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span data-i18n="nowPlaying">NOW PLAYING</span><button id="fpMore"><svg viewBox="0 0 24 24" aria-hidden="true" ><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button></div>
     <div id="fpCover">♪</div>
     <div id="fpTitle"></div>
     <div id="fpArtist"></div>
     <input type="range" id="fpSeek" min="0" max="1000" value="0">
     <div id="fpTimes"><span id="fpCur">0:00</span><span id="fpDur">0:00</span></div>
     <div id="fpCtrls">
-      <button id="fpPrev">⏮</button>
-      <button id="fpPlayB">▶</button>
-      <button id="fpNext">⏭</button>
+      <button id="fpPrev"><svg viewBox="0 0 24 24" aria-hidden="true" ><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
+      <button id="fpPlayB"><svg viewBox="0 0 24 24" aria-hidden="true" ><path d="M8 5v14l11-7z"/></svg></button>
+      <button id="fpNext"><svg viewBox="0 0 24 24" aria-hidden="true" ><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button>
+      <button id="fpRepeat" style="opacity:.45"><svg viewBox="0 0 24 24" aria-hidden="true" ><path d="M17 2l4 4-4 4M3 11V9a3 3 0 013-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 01-3 3H3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
     <div id="fpActs">
-      <button class="icobtn" id="fpFav" style="font-size:24px">♡</button>
-      <button class="icobtn" id="fpDl" style="font-size:24px">⬇</button>
+      <button class="icobtn" id="fpFav" style="font-size:26px"><svg viewBox="0 0 24 24" aria-hidden="true" ><path d="M12 21s-8-5.4-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 5.6-8 11-8 11z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button class="icobtn" id="fpDl" style="font-size:26px"><svg viewBox="0 0 24 24" aria-hidden="true" ><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 20h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
     <div class="sec-t"><span data-i18n="lyrics">Lyrics</span></div>
     <div id="fpLyrics"></div>
@@ -265,14 +337,16 @@ let toastT=null;
 function toast(msg){ const el=$("#toast"); el.textContent=msg; el.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove("show"),2600); }
 function midiHz(m){ return 440*Math.pow(2,(m-69)/12); }
 function fmtT(sec){ if(!isFinite(sec)||sec<0) sec=0; const m=Math.floor(sec/60), s=Math.floor(sec%60); return m+":"+(s<10?"0":"")+s; }
-function hueFor(str){ let h=0; for(let i=0;i<str.length;i++) h=(h*31+str.charCodeAt(i))%50; return 200+h; }
-function coverStyle(hue){ return "background:linear-gradient(135deg,hsl("+hue+",62%,40%),hsl("+((hue+45)%360)+",58%,22%))"; }
+function hueFor(str){ let h=7; for(let i=0;i<str.length;i++) h=(h*31+str.charCodeAt(i))%360; return h; }
+const IC={"play": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" ><path d=\"M8 5v14l11-7z\"/></svg>", "pause": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" ><path d=\"M7 5h4v14H7zM13 5h4v14h-4z\"/></svg>", "prev": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" ><path d=\"M6 5h2v14H6zM20 5v14L9 12z\"/></svg>", "next": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" ><path d=\"M16 5h2v14h-2zM4 5v14l11-7z\"/></svg>", "repeat": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" ><path d=\"M17 2l4 4-4 4M3 11V9a3 3 0 013-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 01-3 3H3\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>", "dl": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" ><path d=\"M12 4v11m0 0l-4-4m4 4l4-4M5 20h14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>", "more": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" ><circle cx=\"5\" cy=\"12\" r=\"2\"/><circle cx=\"12\" cy=\"12\" r=\"2\"/><circle cx=\"19\" cy=\"12\" r=\"2\"/></svg>", "chev": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" ><path d=\"M5 9l7 7 7-7\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>", "heartOn": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" ><path d=\"M12 21s-8-5.4-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 5.6-8 11-8 11z\"/></svg>", "heartOff": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" ><path d=\"M12 21s-8-5.4-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 5.6-8 11-8 11z\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>"};
+const heart=on=>on?IC.heartOn:IC.heartOff;
+function coverStyle(hue){ return "background:linear-gradient(135deg,hsl("+hue+",68%,46%),hsl("+((hue+40)%360)+",62%,26%))"; }
 
 /* ================= I18N ================= */
 const STR = {
 en:{tagline:"Ethiopian Gospel Music",installTitle:"Download the app",installSub:"Add EGS to your home screen",install:"Install",home:"Home",search:"Search",library:"Library",account:"Account",nowPlaying:"NOW PLAYING",
 greetM:"Good morning",greetA:"Good afternoon",greetE:"Good evening",
-playlists:"Playlists",hymnsTitle:"Songs",community:"Community uploads",forYou:"For you",allSongs:"All songs",
+playlists:"Playlists",hymnsTitle:"Songs",newUploads:"New uploads",community:"Community uploads",forYou:"For you",allSongs:"All songs",
 searchPh:"Search songs or artists...",noResults:"No results found.",
 favorites:"Favorites",noFav:"No favorites yet — tap the heart on any song.",
 newPlaylist:"New playlist",playlistName:"Playlist name",create:"Create",cancel:"Cancel",rename:"Rename",del:"Delete",
@@ -285,25 +359,26 @@ myUploads:"My uploads",stPending:"Pending",stApproved:"Approved",stRejected:"Rej
 reviewQ:"Review uploads",approve:"Approve",reject:"Reject",noPending:"No songs waiting for review.",approvedMsg:"Song approved",rejectedMsg:"Song rejected",manageSongs:"Manage songs",delete:"Delete",confirmDelete:"Delete this song permanently?",deletedMsg:"Song deleted ✓",noSongs:"No songs yet.",
 songSubmitted:"Song submitted! It will appear after approval.",
 support:"Support EGS",telebirr:"Telebirr",cbe:"CBE bank account",copy:"Copy",copied:"Copied!",
-supportNote:"EGS is free for everyone. Your support keeps the music playing! 💛",
-tbSteps:"1. Open your telebirr app.\n2. Send any amount to 0902070153 (Dawit).\n3. Thank you for supporting EGS! 💛",
-cbeNote:"Send any amount to this account to support EGS. Thank you! 💛",
-verifyTitle:"Check your email! 📧",verifySteps:"1. Open your email inbox\n2. Tap the confirmation link we sent you\n3. Come back here and log in",resend:"Resend email",resent:"Email sent again — check your inbox!",backToLogin:"Back to log in",
+tbSteps:"1. Open your telebirr app.\n2. Send to 0902070153 (Dawit).\n3. Open Telegram and send the payment screenshot to @egsmusic7.",
+cbeNote:"Send to this account, then open Telegram and send the screenshot to @egsmusic7.",
+premium:"EGS Premium",perMonth:"99 birr / month",perYear:"990 birr / year",
+premNote:"Free downloads: up to 10 songs. Premium unlocks unlimited downloads and no ads. Pay with telebirr or CBE above, then send the screenshot on Telegram to @egsmusic7 — premium is activated manually. Please wait up to 48 hours for payment approval.",
+premActive:"Premium is active",premStatus:"Premium active",daysLeft:"days left",premOffline:"Downloads are saved in the app and play even without internet.",premNeeded:"This song needs premium — renew to play it.",grantPrem:"Grant premium",premEmailPh:"User's email",prem30:"30 days",prem365:"1 year",premGranted:"Premium granted",userNotFound:"No account found with that email.",verifyTitle:"Check your email! 📧",verifySteps:"1. Open your email inbox\n2. Tap the confirmation link we sent you\n3. Come back here and log in",resend:"Resend email",resent:"Email sent again — check your inbox!",backToLogin:"Back to log in",
 privacy:"Privacy",help:"Help",report:"Report a problem",language:"Language",
 privacyTxt:"EGS keeps your favorites, playlists and settings only on your device. If you create an account, your email and uploaded songs are stored securely on our servers and never shared with anyone.",
 helpTxt:"Browse hymns on Home, search for songs, tap the heart to save favorites, and build your own playlists. Downloads let you listen offline. Sign in to upload your own gospel songs — every upload is reviewed before it appears for everyone.",
 localAudio:"Play from my device",localNote:"Files play this session only.",chooseFiles:"Choose audio files",
-download:"Download",downloads:"Downloads",noDownloads:"No downloads yet — tap ⬇ on a song to save it.",dlRemoved:"Download removed",dlDone:"Saved for offline listening!",dlSignIn:"Sign in to download songs.",
+download:"Download",downloads:"Downloads",noDownloads:"No downloads yet — tap ⬇ on a song to save it.",dlRemoved:"Download removed",dlDone:"Saved for offline listening!",dlLimit:"Free download limit reached (10). Go premium for more.",dlSignIn:"Sign in to download songs.",
 lyrics:"Lyrics",noLyrics:"No lyrics provided.",
 loading:"Loading...",serverDown:"Server unavailable — showing built-in hymns only.",
 errAuth:"Couldn't sign you in. Check your details and try again.",
 errUp:"Couldn't create the account. Try a different email.",
 errUpload:"Upload failed. Please try again.",errPerm:"You don't have permission for that.",
 signedIn:"Welcome!",signedOut:"Signed out.",myAccount:"My account",admin:"Admin",
-plays:"plays"},
+plays:"plays",errNet:"Connection problem. Try again."},
 am:{tagline:"የኢትዮጵያ ወንጌል ሙዚቃ",installTitle:"መተግበሪያውን አውርድ",installSub:"EGSን ወደ መነሻ ማያ ገጽዎ ጨምር",install:"ጫን",home:"መነሻ",search:"ፍለጋ",library:"ላይብረሪ",account:"መለያ",nowPlaying:"አሁን እየተጫወተ",
 greetM:"እንደምን አደሩ",greetA:"እንደምን ዋሉ",greetE:"እንደምን አመሹ",
-playlists:"የዘፈን ዝርዝሮች",hymnsTitle:"ዜማዎች",community:"የማኅበረሰብ ስቅሎች",forYou:"ለእርስዎ",allSongs:"ሁሉም ዜማዎች",
+playlists:"የዘፈን ዝርዝሮች",hymnsTitle:"ዜማዎች",newUploads:"አዳዲስ ዜማዎች",community:"የማኅበረሰብ ስቅሎች",forYou:"ለእርስዎ",allSongs:"ሁሉም ዜማዎች",
 searchPh:"ዜማ ወይም ድምጻዊ ፈልግ...",noResults:"ምንም አልተገኘም።",
 favorites:"ተወዳጆች",noFav:"ገና ምንም ተወዳጅ የለም — በየትኛውም ዜማ ላይ የልብ ምልክቱን ይንኩ።",
 newPlaylist:"አዲስ ዝርዝር",playlistName:"የዝርዝሩ ስም",create:"ፍጠር",cancel:"ተወው",rename:"እንደገና ሰይም",del:"ሰርዝ",
@@ -316,22 +391,23 @@ myUploads:"የእኔ ስቅሎች",stPending:"በጥበቃ ላይ",stApproved:"�
 reviewQ:"ስቅሎችን ይመርምሩ",approve:"አጽድቅ",reject:"ውድቅ አድርግ",noPending:"ለግምገማ የሚጠብቅ ዜማ የለም።",approvedMsg:"ዜማው ተቀብሏል",rejectedMsg:"ዜማው ውድቅ ተደርጓል",manageSongs:"ዜማዎች አስተዳደር",delete:"ሰርዝ",confirmDelete:"ይህን ዜማ ሙሉ በሙሉ ሰርዝ?",deletedMsg:"ዜማው ተሰርዟል ✓",noSongs:"ምንም ዜማ የለም።",
 songSubmitted:"ዜማው ተልኳል! ከተቀበለ በኋላ ይታያል።",
 support:"EGSን ይደግፉ",telebirr:"ቴሌብር",cbe:"የCBE የባንክ ሂሳብ",copy:"ቅዳ",copied:"ተቀድቷል!",
-supportNote:"EGS ለሁሉም ነጻ ነው። ድጋፍዎ ሙዚቃውን ያቀጥላል! 💛",
-tbSteps:"1. የቴሌብር መተግበሪያዎን ይክፈቱ።\n2. ማንኛውንም መጠን ወደ 0902070153 (ዳዊት) ይላኩ።\n3. EGSን በመደገፍዎ እናመሰግናለን! 💛",
-cbeNote:"ማንኛውንም መጠን ወደዚህ ሂሳብ EGSን ለመደገፍ ይላኩ። እናመሰግናለን! 💛",
-verifyTitle:"ኢሜይልዎን ይመልከቱ! 📧",verifySteps:"1. የኢሜይል መልእክት ሳጥንዎን ይክፈቱ\n2. የላክነውን የማረጋገጫ ሊንክ ይንኩ\n3. ወደዚህ ተመልሰው ይግቡ",resend:"ኢሜይል እንደገና ላክ",resent:"ኢሜይል እንደገና ተልኳል — መልእክት ሳጥንዎን ይመልከቱ!",backToLogin:"ወደ መግቢያ ተመለስ",
+tbSteps:"1. የቴሌብር መተግበሪያዎን ይክፈቱ።\n2. ወደ 0902070153 (ዳዊት) ይላኩ።\n3. ቴሌግራምን ይክፈቱ እና የክፍያ ስክሪንሾት ወደ @egsmusic7 ይላኩ።",
+cbeNote:"ወደዚህ ሂሳብ ይላኩ፣ ከዚያ ቴሌግራምን ይክፈቱ እና ስክሪንሾቱን ወደ @egsmusic7 ይላኩ።",
+premium:"EGS ፕሪሚየም",perMonth:"99 ብር / በወር",perYear:"990 ብር / በዓመት",
+premNote:"ነጻ ማውረድ፡ እስከ 10 ዜማዎች። ፕሪሚየም ያልተገደበ ማውረድ እና ያለ ማስታወቂያ ይከፍታል። በቴሌብር ወይም CBE ከላይ ይክፈሉ፣ ከዚያ ስክሪንሾቱን በቴሌግራም ወደ @egsmusic7 ይላኩ — ፕሪሚየም በእጅ ይገብራል። እባክዎ ለክፍያ ማጽደቅ እስከ 48 ሰዓት ይጠብቁ።",
+premActive:"ፕሪሚየም ነቅቷል",premStatus:"ፕሪሚየም ነቅቷል",daysLeft:"ቀናት ቀርተዋል",premOffline:"ማውረዶች በመተግበሪያው ውስጥ ይቀመጣሉ እና ያለኢንተርኔትም ይጫወታሉ።",premNeeded:"ይህ ዜማ ፕሪሚየም ይፈልጋል — ለማጫወት ያድሱ።",grantPrem:"ፕሪሚየም ስጥ",premEmailPh:"የተጠቃሚው ኢሜይል",prem30:"30 ቀናት",prem365:"1 ዓመት",premGranted:"ፕሪሚየም ተሰጥቷል",userNotFound:"በዚያ ኢሜይል መለያ አልተገኘም።",verifyTitle:"ኢሜይልዎን ይመልከቱ! 📧",verifySteps:"1. የኢሜይል መልእክት ሳጥንዎን ይክፈቱ\n2. የላክነውን የማረጋገጫ ሊንክ ይንኩ\n3. ወደዚህ ተመልሰው ይግቡ",resend:"ኢሜይል እንደገና ላክ",resent:"ኢሜይል እንደገና ተልኳል — መልእክት ሳጥንዎን ይመልከቱ!",backToLogin:"ወደ መግቢያ ተመለስ",
 privacy:"ግላዊነት",help:"እርዳታ",report:"ችግር ሪፖርት አድርግ",language:"ቋንቋ",
 privacyTxt:"EGS ተወዳጆችዎን፣ ዝርዝሮችዎን እና ቅንብሮችዎን በመሣሪያዎ ላይ ብቻ ያስቀምጣል። መለያ ከፈጠሩ፣ ኢሜይልዎ እና የሰቀሏቸው ዜማዎች በሰርቨሮቻችን ላይ በደህንነት ይቀመጣሉ እና ለማንም አይጋሩም።",
 helpTxt:"በመነሻ ገጽ መዝሙራትን ያዳምጡ፣ ዜማዎችን ይፈልጉ፣ ልብ ምልክቱን በመንካት ተወዳጆችን ይቆጥቡ፣ እና የራስዎን ዝርዝሮች ይፍጠሩ። ማውረዶች ያለ ኢንተርኔት እንዲያዳምጡ ያስችሉዎታል። የራስዎን የወንጌል ዜማዎች ለመስቀል ይግቡ — እያንዳንዱ ስቀል ለሁሉም ከመታየቱ በፊት ይመረመራል።",
 localAudio:"ከመሣሪያዬ አጫውት",localNote:"ፋይሎች በዚህ ክፍለ ጊዜ ብቻ ይጫወታሉ።",chooseFiles:"የድምጽ ፋይሎች ምረጥ",
-download:"አውርድ",downloads:"ውርዶች",noDownloads:"ምንም ውርድ የለም — ⬇ ንካ ዜማ አስቀምጥ።",dlRemoved:"ውርዱ ተሰርዟል",dlDone:"ለኦፍላይን ማዳመጥ ተቀምጧል!",dlSignIn:"ዜማዎችን ለማውረድ ይግቡ።",
+download:"አውርድ",downloads:"ውርዶች",noDownloads:"ምንም ውርድ የለም — ⬇ ንካ ዜማ አስቀምጥ።",dlRemoved:"ውርዱ ተሰርዟል",dlDone:"ለኦፍላይን ማዳመጥ ተቀምጧል!",dlLimit:"የነጻ ማውረድ ገደብ (10) ደርሷል። ለተጨማሪ ፕሪሚየም ይሁኑ።",dlSignIn:"ዜማዎችን ለማውረድ ይግቡ።",
 lyrics:"ግጥም",noLyrics:"ግጥም አልተሰጠም።",
 loading:"እየተጫነ...",serverDown:"ሰርቨሩ አይገኝም — የመዝሙር ስብስብ ብቻ ይታያል።",
 errAuth:"መግባት አልተቻለም። መረጃዎን ይመርምሩ እንደገና ይሞክሩ።",
 errUp:"መለያ መፍጠር አልተቻለም። ሌላ ኢሜይል ይሞክሩ።",
 errUpload:"ስቀሉ አልተሳካም። እንደገና ይሞክሩ።",errPerm:"ለዚህ ፈቃድ የለዎትም።",
 signedIn:"እንኳን ደህና መጡ!",signedOut:"ወጥተዋል።",myAccount:"የእኔ መለያ",admin:"አድሚን",
-plays:"ማጫወቻ"}
+plays:"ማጫወቻ",errNet:"የግንኙነት ችግር። እንደገና ይሞክሩ።"}
 };
 let lang = localStorage.getItem("egs_lang") || "en";
 const t = k => (STR[lang] && STR[lang][k]) || STR.en[k] || k;
@@ -475,6 +551,27 @@ const Store = {
 };
 let favs = Store.get("egs_favs", []);
 let playlists = Store.get("egs_playlists", []);
+let dlCount = Store.get("egs_dl", 0);
+let isPremium = false;
+function updatePremium(){
+  const u = S.profile && S.profile.premium_until ? new Date(S.profile.premium_until).getTime() : 0;
+  isPremium = u > Date.now();
+  return isPremium;
+}
+function premiumDaysLeft(){
+  if(!S.profile || !S.profile.premium_until) return 0;
+  return Math.max(0, Math.ceil((new Date(S.profile.premium_until).getTime()-Date.now())/86400000));
+}
+/* Downloads beyond the free 10 are locked when premium expires (unlocked again on renew) */
+let disabledIds = new Set();
+async function refreshDisabled(){
+  disabledIds=new Set();
+  if(isPremium) return;
+  try{
+    const all=await OffDB.all();
+    if(all.length>10) all.slice(10).forEach(r=>disabledIds.add(r.id));
+  }catch(e){}
+}
 const OffDB = {
   _db:null,
   open(){
@@ -492,7 +589,7 @@ const OffDB = {
     const db=await this.open();
     return new Promise((res,rej)=>{
       const tx=db.transaction("songs","readwrite");
-      tx.objectStore("songs").put({id:song.id,title:song.title,artist:song.artist||"",blob:blob,savedAt:Date.now()});
+      tx.objectStore("songs").put({id:song.id,title:song.title,artist:song.artist||"",worshiper:song.worshiper||"",lyrics:song.lyrics||"",coverUrl:song.coverUrl||"",url:song.url||"",blob:blob,savedAt:Date.now()});
       tx.oncomplete=()=>res(true); tx.onerror=()=>rej(tx.error);
     });
   },
@@ -536,11 +633,22 @@ const saveFavs=()=>Store.set("egs_favs",favs);
 const savePls=()=>Store.set("egs_playlists",playlists);
 
 /* ================= SONG REGISTRY ================= */
-const S = { sbSongs:[], myUploads:[], pending:[], profile:null, user:null, localSongs:[] };
+const S = { sbSongs:[], myUploads:[], pending:[], profile:null, user:null, localSongs:[], offSongs:{} };
+function recToSong(r){ return {id:r.id,sbid:String(r.id).replace(/^sb-/,""),kind:"remote",source:"offline",title:r.title||"Untitled",artist:r.artist||"Unknown",worshiper:r.worshiper||"",coverUrl:r.coverUrl||"",lyrics:r.lyrics||"",url:r.url||"",hue:hueFor(r.title||"x")}; }
+/* re-read saved downloads: rebuilds song info (works with no internet) and keeps the free-limit counter in step with what is really saved */
+async function syncOffline(){
+  try{
+    const all=await OffDB.all(); S.offSongs={};
+    all.forEach(r=>{ S.offSongs[r.id]=recToSong(r); });
+    dlCount=all.length; Store.set("egs_dl",dlCount);
+    await refreshDisabled();
+  }catch(e){}
+  renderLibrary();
+}
 function allSongs(){ return HYMNS.map(hymnSong).concat(S.sbSongs).concat(S.localSongs); }
 function getSong(id){
   const h=HYMNS.find(x=>x.id===id); if(h) return hymnSong(h);
-  return S.sbSongs.concat(S.localSongs).find(s=>s.id===id) || null;
+  return S.sbSongs.concat(S.localSongs).find(s=>s.id===id) || S.offSongs[id] || null;
 }
 function sbToSong(r){
   return { id:"sb-"+r.id, sbid:r.id, kind:"remote", source:"supabase",
@@ -564,6 +672,7 @@ const Player = {
     if(s.kind==="synth"){ Synth.play(s.synth, 0); this.playing=true; syncPlayerUI(); return; }
     OffDB.offlineUrl(s).then(offUrl=>{
       if(this.song()!==s) return;
+      if(disabledIds.has(s.id)){ toast(t("premNeeded")); this.playing=false; syncPlayerUI(); return; }
       const url = s.kind==="local" ? s.objUrl : (offUrl||s.url);
       if(audioEl.getAttribute("data-u")!==url){ audioEl.setAttribute("data-u",url); audioEl.src=url; }
       audioEl.play().catch(()=>toast(t("errNet")));
@@ -601,7 +710,11 @@ const Player = {
     if(s.kind==="synth") return s.synth.loopSec;
     return (isFinite(audioEl.duration)&&audioEl.duration>0)?audioEl.duration:0; }
 };
-audioEl.addEventListener("ended", ()=>Player.next());
+let repeatOne=false;
+audioEl.addEventListener("ended", ()=>{
+  if(repeatOne){ try{ audioEl.currentTime=0; audioEl.play().catch(()=>{}); }catch(e){} }
+  else Player.next();
+});
 function syncPlayerUI(){
   const s=Player.song(), mp=$("#mp");
   document.body.classList.toggle("is-playing", !!(s&&Player.playing));
@@ -610,15 +723,15 @@ function syncPlayerUI(){
   $("#mpCover").style.cssText=s.coverUrl?("background-image:url('"+s.coverUrl.replace(/'/g,"%27")+"');background-size:cover;background-position:center"):coverStyle(s.hue||hueFor(s.title));
   $("#mpCover").textContent=s.coverUrl?"":s.title.charAt(0).toUpperCase();
   $("#mpTitle").textContent=s.title; $("#mpArtist").textContent=s.artist;
-  $("#mpPlay").textContent=Player.playing?"⏸":"▶";
-  const fp=$("#fp");
+  $("#mpPlay").innerHTML=Player.playing?IC.pause:IC.play;
+  const fp=$("#fp"); fp.style.background="linear-gradient(180deg,hsl("+(s.hue||hueFor(s.title))+",48%,32%),#121212 64%)";
   if(!fp.hidden){
     $("#fpCover").style.cssText=s.coverUrl?("background-image:url('"+s.coverUrl.replace(/'/g,"%27")+"');background-size:cover;background-position:center"):coverStyle(s.hue||hueFor(s.title));
     $("#fpCover").textContent=s.coverUrl?"":"♪";
     $("#fpTitle").textContent=s.title; $("#fpArtist").textContent=s.worshiper?("🙏 "+s.worshiper):s.artist;
     $("#fpLyrics").innerHTML = s.lyrics ? "<b>"+esc(t("lyrics"))+"</b>\n"+esc(s.lyrics) : esc(t("noLyrics"));
-    $("#fpPlayB").textContent=Player.playing?"⏸":"▶";
-    $("#fpFav").textContent=favs.includes(s.id)?"♥":"♡";
+    $("#fpPlayB").innerHTML=Player.playing?IC.pause:IC.play;
+    $("#fpFav").innerHTML=heart(favs.includes(s.id));
     $("#fpFav").classList.toggle("fav", favs.includes(s.id));
   }
 }
@@ -628,6 +741,7 @@ setInterval(()=>{
   const s=Player.song(); if(!s) return;
   const p=Player.pos(), d=Player.dur();
   $("#fpSeek").value = d>0 ? Math.round(p/d*1000) : 0;
+  const pc=d>0?p/d*100:0; $("#fpSeek").style.background="linear-gradient(90deg,#fff "+pc+"%,#535353 "+pc+"%)"; const mb=$("#mpBar i"); if(mb) mb.style.width=pc+"%";
   $("#fpCur").textContent=fmtT(p);
   $("#fpDur").textContent=(showRemaining&&d>0)?fmtT(Math.max(0,d-p)):fmtT(d);
 }, 500);
@@ -645,16 +759,19 @@ $$("#tabbar button").forEach(b=>b.addEventListener("click",()=>switchTab(b.datas
 /* ================= UI: SONG ROWS ================= */
 function songRow(s, queue, idx){
   const b=document.createElement("button"); b.className="srow";
+  const locked=disabledIds.has(s.id);
+  if(locked) b.style.opacity=".45";
   b.innerHTML='<div class="cover" style="'+(s.coverUrl?'background-image:url(\''+esc(s.coverUrl)+'\');background-size:cover;background-position:center':coverStyle(s.hue||hueFor(s.title)))+'">'+(s.coverUrl?'':esc(s.title.charAt(0).toUpperCase()))+'</div>'
-    +'<div class="mi"><b>'+esc(s.title)+'</b><span>'+(s.worshiper?'🙏 '+esc(s.worshiper):esc(s.artist))+'</span></div>'
-    +'<span class="icobtn '+(favs.includes(s.id)?"fav":"")+'" data-act="fav">'+(favs.includes(s.id)?"♥":"♡")+'</span>'
-    +'<span class="icobtn" data-act="dl">⬇</span>'
-    +'<span class="icobtn" data-act="more">⋯</span>';
+    +'<div class="mi"><b>'+esc(s.title)+(locked?' 🔒':'')+'</b><span>'+(s.worshiper?'🙏 '+esc(s.worshiper):esc(s.artist))+'</span></div>'
+    +'<span class="icobtn '+(favs.includes(s.id)?"fav":"")+'" data-act="fav">'+heart(favs.includes(s.id))+'</span>'
+    +'<span class="icobtn" data-act="dl">'+IC.dl+'</span>'
+    +'<span class="icobtn" data-act="more">'+IC.more+'</span>';
   b.addEventListener("click",e=>{
     const act=e.target.closest("[data-act]")?.dataset.act;
-    if(act==="fav"){ toggleFav(s.id); const ic=e.target.closest("[data-act]"); ic.textContent=favs.includes(s.id)?"♥":"♡"; ic.classList.toggle("fav",favs.includes(s.id)); ic.classList.remove("pop"); void ic.offsetWidth; ic.classList.add("pop"); e.stopPropagation(); return; }
+    if(act==="fav"){ toggleFav(s.id); const ic=e.target.closest("[data-act]"); ic.innerHTML=heart(favs.includes(s.id)); ic.classList.toggle("fav",favs.includes(s.id)); ic.classList.remove("pop"); void ic.offsetWidth; ic.classList.add("pop"); e.stopPropagation(); return; }
     if(act==="dl"){ downloadSong(s); e.stopPropagation(); return; }
     if(act==="more"){ openSheet(s); e.stopPropagation(); return; }
+    if(locked){ toast(t("premNeeded")); return; }
     openFullPlayer(s, queue);
   });
   return b;
@@ -674,13 +791,25 @@ function toggleFav(id){
 function renderHome(){
   const h=new Date().getHours();
   $("#greet").textContent=(h<12?t("greetM"):h<17?t("greetA"):t("greetE"))+" 👋";
+  // new uploads shelf (art cards)
+  const nr=$("#homeNewRow"); nr.innerHTML="";
+  const nu=S.sbSongs.slice(-10).reverse();
+  if(!nu.length) nr.innerHTML='<p class="muted">'+t("empty")+'</p>';
+  nu.forEach(s=>{
+    const d=document.createElement("button"); d.className="artcard";
+    const art=s.coverUrl?("background-image:url('"+s.coverUrl.replace(/'/g,"%27")+"');background-size:cover;background-position:center"):coverStyle(s.hue||hueFor(s.title));
+    d.innerHTML='<div class="art" style="'+art+'">'+(s.coverUrl?"":esc(s.title.charAt(0).toUpperCase()))+'</div>'
+      +'<span class="t">'+esc(s.title)+'</span><span class="a">'+esc(s.worshiper||s.artist)+'</span>';
+    d.addEventListener("click",()=>openFullPlayer(s,nu));
+    nr.appendChild(d);
+  });
   // playlist cards
   const row=$("#homePlRow"); row.innerHTML="";
   const cards=playlists.map(p=>({name:p.name,hue:hueFor(p.name),songs:p.items.map(getSong).filter(Boolean)}));
   if(!cards.length) row.innerHTML='<p class="muted">'+t("empty")+'</p>';
   cards.forEach(c=>{
     const d=document.createElement("button"); d.className="hcard";
-    d.innerHTML='<div class="cv" style="'+coverStyle(c.hue)+'"></div><div class="lb">'+esc(c.name)+'<small>'+c.songs.length+" "+t("allSongs").toLowerCase()+'</small></div>';
+    d.innerHTML='<div class="cv" style="'+coverStyle(c.hue)+'"></div><div class="lb">'+esc(c.name)+'<small>'+c.songs.length+" "+(lang==="am"?"ዜማዎች":"songs")+'</small></div>';
     d.addEventListener("click",()=>{ if(c.songs.length) openFullPlayer(c.songs[0], c.songs); });
     row.appendChild(d);
   });
@@ -696,7 +825,7 @@ $("#searchInput").addEventListener("input",e=>renderSearchList(e.target.value));
 function renderSearchList(q){
   const box=$("#searchResults"); box.innerHTML="";
   q=(q||"").trim().toLowerCase();
-  const list=allSongs().filter(s=>!q||s.title.toLowerCase().includes(q)||s.artist.toLowerCase().includes(q));
+  const list=allSongs().filter(s=>!q||s.title.toLowerCase().includes(q)||s.artist.toLowerCase().includes(q)||(s.worshiper||"").toLowerCase().includes(q));
   if(!list.length){ box.innerHTML='<p class="muted center" style="margin-top:20px">'+t("noResults")+'</p>'; return; }
   list.forEach((s,i)=>box.appendChild(songRow(s,list,i)));
 }
@@ -747,7 +876,7 @@ async function renderDownloads(){
   let recs=[];
   try{ recs=await OffDB.all(); }catch(e){}
   if(!recs.length){ box.innerHTML='<p class="muted">'+t("noDownloads")+'</p>'; return; }
-  const songs=recs.map(r=>getSong(r.id)).filter(Boolean);
+  const songs=recs.map(r=>getSong(r.id)||recToSong(r));
   if(!songs.length){ box.innerHTML='<p class="muted">'+t("noDownloads")+'</p>'; return; }
   songs.forEach((s,i)=>{
     const row=songRow(s,songs,i);
@@ -761,7 +890,9 @@ async function renderDownloads(){
 }
 async function removeDownload(id){
   await OffDB.remove(id);
-  renderDownloads();
+  try{ if(dlCount>0){ dlCount--; Store.set("egs_dl",dlCount); } }catch(e){}
+  try{ await refreshDisabled(); }catch(e){}
+  await syncOffline();
   toast(t("dlRemoved"));
 }
 $("#btnNewPl").addEventListener("click",()=>{
@@ -774,7 +905,7 @@ function openSheet(s){
   const w=$("#sheetWrap"), body=$("#sheetBody");
   body.innerHTML='<h3>'+esc(s.title)+'</h3><div class="sub">'+esc(s.artist)+'</div>';
   const fav=document.createElement("button"); fav.className="shbtn";
-  fav.innerHTML='<span style="font-size:18px">'+(favs.includes(s.id)?"♥":"♡")+'</span><span>'+t("favorites")+'</span>';
+  fav.innerHTML='<span style="font-size:18px">'+heart(favs.includes(s.id))+'</span><span>'+t("favorites")+'</span>';
   fav.addEventListener("click",()=>{ toggleFav(s.id); closeSheet(); syncPlayerUI(); renderSearchList($("#searchInput").value); });
   const dl=document.createElement("button"); dl.className="shbtn";
   dl.innerHTML='<span style="font-size:18px">⬇</span><span>'+t("download")+'</span>';
@@ -819,6 +950,10 @@ $("#fpPlayB").addEventListener("click",()=>Player.toggle());
 $("#fpNext").addEventListener("click",()=>Player.next());
 $("#fpPrev").addEventListener("click",()=>Player.prev());
 $("#fpSeek").addEventListener("input",e=>Player.seek(e.target.value/1000));
+$("#fpRepeat").addEventListener("click",()=>{
+  repeatOne=!repeatOne;
+  $("#fpRepeat").style.opacity=repeatOne?"1":"0.45";
+});
 $("#fpFav").addEventListener("click",()=>{ const s=Player.song(); if(s){ toggleFav(s.id); const b=$("#fpFav"); b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); syncPlayerUI(); } });
 $("#fpDl").addEventListener("click",()=>{ const s=Player.song(); if(s) downloadSong(s); });
 $("#fpMore").addEventListener("click",()=>{ const s=Player.song(); if(s) openSheet(s); });
@@ -828,6 +963,7 @@ function safeName(s){ return (s||"song").replace(/[^\w\-. ]+/g,"").trim().slice(
 async function downloadSong(s){
   if(!S.user){ toast(t("dlSignIn")); switchTab("account"); return; }
   if(s.kind==="local"){ toast(t("dlDone")); return; }
+  if(!isPremium && dlCount>=10){ toast(t("dlLimit")); switchTab("account"); return; }
   toast("⏳");
   try{
     let blob, name;
@@ -843,7 +979,9 @@ async function downloadSong(s){
     a.href=URL.createObjectURL(blob); a.download=name;
     document.body.appendChild(a); a.click();
     setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },4000);
-    try{ renderDownloads(); }catch(e){}
+    dlCount++; Store.set("egs_dl",dlCount);
+    try{ await refreshDisabled(); }catch(e){}
+    try{ await syncOffline(); }catch(e){}
     toast(t("dlDone"));
   }catch(e){ toast(t("errNet")); }
 }
@@ -897,13 +1035,13 @@ async function fetchProfile(){
 }
 async function refreshAfterAuth(){
   S.oauthError=null;
-  await fetchProfile();
+  await fetchProfile(); updatePremium(); await refreshDisabled();
   await loadMyUploads(); await loadPending(); renderAccount();
 }
 
 /* ================= ACCOUNT TAB ================= */
 let authMode="up";
-function renderAccount(){ renderAuth(); renderUploadBox(); renderMyUploadsBox(); renderAdminBox(); renderSupportBox(); renderExtrasBox(); }
+function renderAccount(){ renderAuth(); renderUploadBox(); renderMyUploadsBox(); renderAdminBox(); renderPremBox(); renderSupportBox(); renderExtrasBox(); }
 
 function renderAuth(){
   const box=$("#authBox"); box.innerHTML="";
@@ -914,7 +1052,7 @@ function renderAuth(){
       +'<div class="kv"><span>'+t("email")+'</span><b>'+esc(S.user.email||"")+'</b></div>'
       +'<div class="kv"><span>'+t("signUp")+'</span><b>'+esc((S.profile&&S.profile.display_name)||"—")+'</b></div>';
     const out=document.createElement("button"); out.className="btn ghost"; out.textContent=t("signOut");
-    out.addEventListener("click",async()=>{ await supa.auth.signOut(); S.user=null;S.profile=null;S.myUploads=[];S.pending=[]; try{await OffDB.clear();}catch(e){} renderAccount(); toast(t("signedOut")); });
+    out.addEventListener("click",async()=>{ await supa.auth.signOut(); S.user=null;S.profile=null;S.myUploads=[];S.pending=[]; isPremium=false; await refreshDisabled(); renderAccount(); toast(t("signedOut")); });
     d.appendChild(out); box.appendChild(d); return;
   }
   const d=document.createElement("div"); d.className="card";
@@ -1133,6 +1271,24 @@ function renderMyUploadsBox(){
   h.addEventListener("click",()=>{ Store.set("egs_mu_open",!open); renderMyUploadsBox(); });
 }
 
+async function doGrantPremium(days){
+  const box=$("#adminBox");
+  const emEl=box.querySelector("#gpEmail"), note=box.querySelector("#gpNote");
+  const email=(emEl.value||"").trim().toLowerCase();
+  note.textContent="";
+  if(!email){ note.textContent=t("userNotFound"); return; }
+  note.textContent="⏳";
+  try{
+    const {data,error}=await supa.from("profiles").select("id,premium_until").eq("email",email).single();
+    if(error||!data) throw new Error("notfound");
+    const base=Math.max(Date.now(), data.premium_until?new Date(data.premium_until).getTime():0);
+    const until=new Date(base+days*86400000).toISOString();
+    const {error:uerr}=await supa.from("profiles").update({premium_until:until}).eq("id",data.id);
+    if(uerr) throw uerr;
+    emEl.value=""; note.textContent=t("premGranted")+" ✓"; toast(t("premGranted"));
+  }catch(e){ note.textContent=t("userNotFound"); }
+}
+
 function renderAdminBox(){
   const box=$("#adminBox"); box.innerHTML="";
   if(!supa||!S.profile||!S.profile.is_admin) return;
@@ -1153,6 +1309,16 @@ function renderAdminBox(){
     d.appendChild(item);
   });
   box.appendChild(d);
+  /* grant premium (admin) */
+  const p=document.createElement("div"); p.className="card";
+  p.innerHTML='<h3>⭐ '+t("grantPrem")+'</h3>'
+    +'<div class="fld"><label>'+t("premEmailPh")+'</label><input id="gpEmail" type="email" placeholder="user@email.com" autocomplete="off"></div>'
+    +'<div class="row2"><button class="btn small" id="gp30">'+t("prem30")+'</button>'
+    +'<button class="btn small ghost" id="gp365">'+t("prem365")+'</button></div>'
+    +'<p class="note" id="gpNote"></p>';
+  box.appendChild(p);
+  p.querySelector("#gp30").addEventListener("click",()=>doGrantPremium(30));
+  p.querySelector("#gp365").addEventListener("click",()=>doGrantPremium(365));
   /* manage songs (admin delete) */
   const mbox=document.createElement("div"); mbox.className="card";
   const mOpen=Store.get("egs_ms_open",false);
@@ -1195,12 +1361,40 @@ async function deleteSong(id,audioUrl){
 }
 
 
+function renderPremBox(){
+  const box=$("#premBox"); box.innerHTML="";
+  const d=document.createElement("div"); d.className="card";
+  let html='<h3>⭐ '+t("premium")+'</h3>';
+  if(isPremium){
+    html+='<p><b class="gold">'+t("premStatus")+'</b> · '+premiumDaysLeft()+' '+t("daysLeft")+'</p>'
+      +'<p class="note">'+t("premOffline")+'</p>';
+  }else{
+    html+='<div class="plan"><b>'+t("perMonth")+'</b></div>'
+      +'<div class="plan"><b>'+t("perYear")+'</b></div>'
+      +'<div class="hr"></div>'
+      +'<p class="note"><b class="gold">'+t("telebirr")+'</b> — Dawit</p>'
+      +'<div class="copyrow"><b>0902070153</b><button id="cpTbP">'+t("copy")+'</button></div>'
+      +'<div class="steps">'+esc(t("tbSteps"))+'</div>'
+      +'<div class="hr"></div>'
+      +'<p class="note"><b class="gold">'+t("cbe")+'</b> — Dawit</p>'
+      +'<div class="copyrow"><b>1000796194654</b><button id="cpCbeP">'+t("copy")+'</button></div>'
+      +'<p class="note">'+esc(t("cbeNote"))+'</p>'
+      +'<div class="hr"></div>'
+      +'<p class="note">'+t("premNote")+'</p>'
+      +'<p class="note">'+t("download")+': '+dlCount+' / 10</p>'
+      +'<p class="note">'+t("premOffline")+'</p>';
+  }
+  d.innerHTML=html;
+  box.appendChild(d);
+  const c1=d.querySelector("#cpTbP"); if(c1) c1.addEventListener("click",()=>copyText("0902070153"));
+  const c2=d.querySelector("#cpCbeP"); if(c2) c2.addEventListener("click",()=>copyText("1000796194654"));
+}
+
 function renderSupportBox(){
   const box=$("#supportBox"); box.innerHTML="";
   const d=document.createElement("div"); d.className="card";
   const tb="0902070153", cbe="1000796194654";
   d.innerHTML='<h3>💛 '+t("support")+'</h3>'
-    +'<p class="note">'+t("supportNote")+'</p>'
     +'<p class="note"><b class="gold">'+t("telebirr")+'</b> — Dawit</p>'
     +'<div class="copyrow"><b>'+tb+'</b><button id="cpTb">'+t("copy")+'</button></div>'
     +'<div class="steps">'+esc(t("tbSteps"))+'</div>'
@@ -1267,13 +1461,14 @@ async function initAuth(){
   try{
     const {data}=await supa.auth.getSession();
     if(data&&data.session){ S.user=data.session.user; await refreshAfterAuth(); }
+    else { isPremium=false; }
   }catch(e){}
   supa.auth.onAuthStateChange(async(_ev,session)=>{
     const nu=session?session.user:null;
     const changed=(nu?nu.id:null)!==(S.user?S.user.id:null);
     S.user=nu;
     if(!changed) return;
-    if(S.user){ await refreshAfterAuth(); } else { S.profile=null; S.myUploads=[]; S.pending=[]; renderAccount(); }
+    if(S.user){ await refreshAfterAuth(); } else { S.profile=null; S.myUploads=[]; S.pending=[]; isPremium=false; renderAccount(); }
   });
 }
 
@@ -1300,6 +1495,7 @@ renderSearchList("");
 renderLibrary();
 renderAccount();
 if(supa){ initAuth(); loadApproved(); }
+syncOffline();
 </script>
 </body>
 </html>
