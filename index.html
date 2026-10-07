@@ -244,6 +244,27 @@ body.is-playing #fpCover{animation:none}
 .instPill button{display:flex;align-items:center;gap:7px;background:none;border:0;color:#fff;font-family:inherit;font-weight:700;font-size:13px;padding:9px 12px;cursor:pointer}
 .instPill svg{width:16px;height:16px}
 #installX{color:#b3b3b3;padding:9px 11px 9px 2px}
+
+/* ===== artist upload wizard ===== */
+.vh{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.wiz h3{font-size:18px;margin-bottom:4px}
+.step{display:flex;gap:12px;align-items:center;margin:20px 0 8px}
+.step b{font-size:15px}
+.stepn{width:28px;height:28px;border-radius:50%;background:var(--gold);color:#000;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex:none}
+.drop{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%;border:2px dashed var(--gold);border-radius:14px;padding:24px 12px;text-align:center;background:var(--card2);cursor:pointer;color:var(--txt)}
+.drop.ok{border-style:solid;background:rgba(30,215,96,.12)}
+.drop svg{width:34px;height:34px;fill:none;stroke:var(--gold);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.drop b{font-size:15px}
+.drop small{color:var(--mut);font-size:12px;word-break:break-all}
+.prog{display:none;height:10px;border-radius:6px;background:var(--card2);overflow:hidden;margin:12px 0 4px}
+.prog i{display:block;height:100%;width:0;background:var(--gold);transition:width .2s}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5;color:var(--mut);margin:14px 0 4px}
+.chk input{width:20px;height:20px;margin-top:1px;accent-color:#1ed760;flex:none}
+.note.warn,.warn{color:#f0938d}
+.okcard{text-align:center}
+.okcard .note{margin-bottom:6px}
+details.more>summary{cursor:pointer;font-weight:700;font-size:14px;padding:4px 0}
+.pill.a{background:#123a24;color:#7fe0a8}
 </style>
 </head>
 <body>
@@ -349,6 +370,7 @@ try { if (window.supabase && window.supabase.createClient) supa = window.supabas
 const $ = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
 function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function cssUrl(u){ return String(u||"").replace(/['"()\\\s]/g,c=>encodeURIComponent(c)); }
 function botLink(){ return '<a href="https://t.me/egs_music_bot" target="_blank" style="color:var(--gold);font-weight:700">@egs_music_bot</a>'; }
 function escBot(s){ return esc(s).split("@egs_music_bot").join(botLink()); }
 let toastT=null;
@@ -393,7 +415,7 @@ errAuth:"Couldn't sign you in. Check your details and try again.",
 errUp:"Couldn't create the account. Try a different email.",
 errUpload:"Upload failed. Please try again.",errPerm:"You don't have permission for that.",
 signedIn:"Welcome!",reportSong:"Report this song",sleepTimer:"Sleep timer",sleepOff:"Turn off timer",sleepEnd:"After this song",sleepMin:"minutes",sleepSet:"Timer set",sleepStopped:"Playback stopped",signedOut:"Signed out.",myAccount:"My account",admin:"Admin",artist:"Artist",songs:"songs",playAll:"Play all",back:"Back",updates:"Updates",noUpdates:"No updates yet.",notifApproved:"was approved and is now live ✓",notifRejected:"was not approved",markAllRead:"Mark all read",makeArtist:"Make artist",artistNote:"Uploads are invite-only. Enter the artist's account email to let them upload songs.",artistGranted:"Artist access granted",
-plays:"plays",errNet:"Connection problem. Try again.",tapToPlay:"Tap \u25b6 to keep the music playing"},
+plays:"plays",errNet:"Connection problem. Try again.",beArtist:"Are you an artist?",beArtistSub:"Only verified artists can upload songs. Apply once — we check your details and approve you.",beArtistSignIn:"Only verified artists can upload songs. Create a free account (or log in) above, then apply here.",aName:"Artist or ministry name",aContact:"Phone or Telegram (so we can verify you)",aLink:"Link to your music (YouTube, Facebook, TikTok…)",aMsg:"Tell us about yourself (optional)",aSend:"Send application",aSent:"Application sent! We will review it soon.",aPending:"Your application is being reviewed. You can upload as soon as it is approved.",aRejected:"Your application was not approved. Check your details and apply again.",aNeed:"Please enter your artist name and a phone or Telegram.",aErr:"Couldn't send your application. Try again later.",appsQ:"Artist applications",noApps:"No applications waiting.",upHeader:"Upload your song",upIntroLive:"3 easy steps. Your song goes live for everyone as soon as you press Publish.",upIntroReview:"3 easy steps. After you press Publish, an admin reviews your song before it goes live.",step1:"Choose your audio file",step2:"Song details",step3:"Cover and lyrics (optional)",pickAudio:"Tap to choose your audio",pickAudioSub:"MP3, M4A, WAV, AAC or OGG — up to 50 MB",pickedAudio:"Audio selected — tap to change",upNotAudio:"That is not an audio file. Choose an MP3, M4A, WAV, AAC or OGG file.",upTooBig:"This file is bigger than 50 MB. Export a smaller MP3 and try again.",upNeedAudio:"Choose an audio file first.",upNeedTitle:"Enter the song title.",upNeedArtist:"Enter the artist name.",upNeedRights:"Tick the box to confirm you have the rights to this music.",rightsChk:"I own this music or have permission to share it. I understand it can be removed if someone reports it.",publish:"Publish song",uploading:"Uploading",songLive:"Your song is live! 🎉",listenNow:"Listen now",upAnother:"Upload another song",myDelete:"Delete",manyTitle:"Upload many songs at once (album)",offlineUp:"You are offline. Connect to the internet to upload.",bulkDoneLive:"All songs are live!",tapToPlay:"Tap \u25b6 to keep the music playing"},
 am:{tagline:"የኢትዮጵያ ዜማዎች",installTitle:"መተግበሪያውን አውርድ",installSub:"ESን ወደ መነሻ ማያ ገጽዎ ጨምር",install:"ጫን",iosHint:"የShare ቁልፉን ይንኩ፣ ከዚያ «ወደ መነሻ ማያ ገጽ ጨምር» ይምረጡ።",menuHint:"የአሳሽዎን ምናሌ ይክፈቱ፣ ከዚያ «መተግበሪያ ጫን» ወይም «ወደ መነሻ ማያ ገጽ ጨምር» ይምረጡ።",home:"መነሻ",search:"ፍለጋ",library:"ላይብረሪ",account:"መለያ",nowPlaying:"አሁን እየተጫወተ",
 greetM:"እንደምን አደሩ",greetA:"እንደምን ዋሉ",greetE:"እንደምን አመሹ",
 playlists:"የዘፈን ዝርዝሮች",hymnsTitle:"ዜማዎች",newUploads:"አዳዲስ ዜማዎች",community:"የማኅበረሰብ ስቅሎች",forYou:"ለእርስዎ",allSongs:"ሁሉም ዜማዎች",
@@ -424,8 +446,8 @@ loading:"እየተጫነ...",serverDown:"ሰርቨሩ አይገኝም — የመ
 errAuth:"መግባት አልተቻለም። መረጃዎን ይመርምሩ እንደገና ይሞክሩ።",
 errUp:"መለያ መፍጠር አልተቻለም። ሌላ ኢሜይል ይሞክሩ።",
 errUpload:"ስቀሉ አልተሳካም። እንደገና ይሞክሩ።",errPerm:"ለዚህ ፈቃድ የለዎትም።",
-signedIn:"እንኳን ደህና መጡ!",reportSong:"ዜማውን ሪፖርት አድርግ",sleepTimer:"የእንቅልፋ ቆጨሪ",sleepOff:"ቆጨሪውን አጫፋ",sleepEnd:"ከዚህ ዜማ በዋላ",sleepMin:"ደቂቃ",sleepSet:"ቆጨሪ ተቀምጧል",sleepStopped:"ማጥወት ተቅጁል",signedOut:"ወጥተዋል።",myAccount:"የእኔ መለያ",admin:"አድሚን",artist:"አርቲስት",songs:"ዜማዎች",playAll:"ሁሉንም አጫውት",back:"ተመለስ",updates:"ማሳወቂያዎች",noUpdates:"ገና ምንም ማሳወቂያ የለም።",notifApproved:"ተቀብሎ አሁን ታትሟል ✓",notifRejected:"አልተቀበለም",markAllRead:"ሁሉንም እንደተነበበ ምልክት አድርግ",makeArtist:"አርቲስት አድርግ",artistNote:"ስቀላቶች በእርዳታ ብቻ ናቸው። አርቲስቱ እንዲሰቅል የኢሜይል አድራሻውን ከዚህ በታች ያስገቡ።",artistGranted:"የአርቲስት ፈቃድ ተሰጥቷል",
-plays:"ማጫወቻ",errNet:"የግንኙነት ችግር። እንደገና ይሞክሩ።",tapToPlay:"ሙዚቃው እንዲቀጥል \u25b6 ይንኩ"}
+signedIn:"እንኳን ደህና መጡ!",reportSong:"ዜማውን ሪፖርት አድርግ",sleepTimer:"የእንቅልፍ ቆጣሪ",sleepOff:"ቆጣሪውን አጥፋ",sleepEnd:"ከዚህ ዜማ በኋላ",sleepMin:"ደቂቃ",sleepSet:"ቆጣሪ ተቀምጧል",sleepStopped:"ማጫወት ቆሟል",signedOut:"ወጥተዋል።",myAccount:"የእኔ መለያ",admin:"አድሚን",artist:"አርቲስት",songs:"ዜማዎች",playAll:"ሁሉንም አጫውት",back:"ተመለስ",updates:"ማሳወቂያዎች",noUpdates:"ገና ምንም ማሳወቂያ የለም።",notifApproved:"ተቀብሎ አሁን ታትሟል ✓",notifRejected:"አልተቀበለም",markAllRead:"ሁሉንም እንደተነበበ ምልክት አድርግ",makeArtist:"አርቲስት አድርግ",artistNote:"ስቀላቶች በእርዳታ ብቻ ናቸው። አርቲስቱ እንዲሰቅል የኢሜይል አድራሻውን ከዚህ በታች ያስገቡ።",artistGranted:"የአርቲስት ፈቃድ ተሰጥቷል",
+plays:"ማጫወቻ",errNet:"የግንኙነት ችግር። እንደገና ይሞክሩ።",beArtist:"አርቲስት ነዎት?",aName:"የአርቲስት ወይም የአገልግሎት ስም",aSend:"ማመልከቻ ላክ",aPending:"ማመልከቻዎ እየተመረመረ ነው። እንደጸደቀ መስቀል ይችላሉ።",appsQ:"የአርቲስት ማመልከቻዎች",noApps:"የሚጠብቅ ማመልከቻ የለም።",upHeader:"ዜማዎን ይስቀሉ",step1:"የድምጽ ፋይልዎን ይምረጡ",step2:"የዜማው ዝርዝር",step3:"ሽፋን እና ግጥም (አማራጭ)",pickAudio:"የድምጽ ፋይል ለመምረጥ ይንኩ",publish:"ዜማውን አውጣ",uploading:"በመስቀል ላይ",songLive:"ዜማዎ ታትሟል! 🎉",upAnother:"ሌላ ዜማ ይስቀሉ",myDelete:"ሰርዝ",tapToPlay:"ሙዚቃው እንዲቀጥል \u25b6 ይንኩ"}
 };
 let lang = localStorage.getItem("egs_lang") || "en";
 const t = k => (STR[lang] && STR[lang][k]) || STR.en[k] || k;
@@ -676,7 +698,7 @@ const saveFavs=()=>Store.set("egs_favs",favs);
 const savePls=()=>Store.set("egs_playlists",playlists);
 
 /* ================= SONG REGISTRY ================= */
-const S = { sbSongs:[], myUploads:[], pending:[], profile:null, user:null, localSongs:[], offSongs:{}, notifs:[] };
+const S = { sbSongs:[], myUploads:[], pending:[], profile:null, user:null, localSongs:[], offSongs:{}, notifs:[], myApp:null, apps:[] };
 const coverObj={};
 function recToSong(r){ let cu=r.coverUrl||""; if(r.coverBlob){ cu=coverObj[r.id]||(coverObj[r.id]=URL.createObjectURL(r.coverBlob)); } return {id:r.id,sbid:String(r.id).replace(/^sb-/,""),kind:"remote",source:"offline",title:r.title||"Untitled",artist:r.artist||"Unknown",worshiper:r.worshiper||"",coverUrl:cu,lyrics:r.lyrics||"",url:r.url||"",hue:hueFor(r.title||"x")}; }
 /* re-read saved downloads: rebuilds song info (works with no internet) and keeps the free-limit counter in step with what is really saved */
@@ -706,17 +728,18 @@ const audioEl = new Audio();
 audioEl.preload="auto";
 /* Silent preloader: warms up the NEXT track while the current one plays, so it starts instantly */
 const preloader = new Audio();
-preloader.preload="auto";
+preloader.preload="metadata";
 /* Download the next song into memory so it starts instantly (the old hidden <audio> preloader never shared its data with the player) */
 let preBlob={id:null,url:null,busy:null}, curBlobUrl=null;
 function prefetchBlob(n){
   if(!n||!n.url||preBlob.id===n.id||preBlob.busy===n.id) return;
+  try{ const c=navigator.connection; if(c&&(c.saveData||c.type==="cellular"||/(^|-)2g$/.test(c.effectiveType||""))){ preloader.src=n.url; return; } }catch(e){}
   if(preBlob.url){ try{URL.revokeObjectURL(preBlob.url);}catch(e){} preBlob.url=null; preBlob.id=null; }
   preBlob.busy=n.id;
   fetch(n.url).then(r=>{
     if(!r.ok) throw new Error("http");
     const len=+r.headers.get("content-length")||0;
-    if(len>45e6) throw new Error("big");
+    if(!len||len>25e6) throw new Error("big");
     return r.blob();
   }).then(b=>{
     if(preBlob.busy!==n.id) return;
@@ -843,24 +866,21 @@ audioEl.addEventListener("error", ()=>{
   if(errRetried!==s.id){ errRetried=s.id; const t0=audioEl.currentTime||0; try{ audioEl.load(); audioEl.currentTime=t0; audioEl.play().catch(()=>{}); }catch(e){} }
   else { toast(t("errNet")); Player.next(); }
 });
-audioEl.addEventListener("ended", ()=>{
+let endGuard=false;
+function trackFinished(){
+  if(endGuard) return;
+  endGuard=true; setTimeout(()=>{ endGuard=false; }, 1500);
   if(sleepAfterSong){ sleepAfterSong=false; Player.playing=false; syncPlayerUI(); updateSleepUI(); toast(t("sleepStopped")); return; }
   if(repeatOne){ try{ audioEl.currentTime=0; audioEl.play().catch(()=>{}); }catch(e){} }
   else Player.next();
-});
-/* Fallback: on slow networks the "ended" event sometimes never fires — advance when we're at the very end */
-let endGuard=false;
+}
+audioEl.addEventListener("ended", trackFinished);
+/* Fallback: on slow networks "ended" sometimes never fires, so also advance at the very end */
 audioEl.addEventListener("timeupdate", ()=>{
   try{
     const d=audioEl.duration;
-    if(!isFinite(d)||d<=0||!Player.playing||endGuard) return;
-    if(audioEl.currentTime>=d-0.4){
-      endGuard=true;
-      setTimeout(()=>{ endGuard=false; }, 1500);
-      if(sleepAfterSong){ sleepAfterSong=false; Player.playing=false; syncPlayerUI(); updateSleepUI(); toast(t("sleepStopped")); return; }
-      if(repeatOne){ try{ audioEl.currentTime=0; audioEl.play().catch(()=>{}); }catch(e){} }
-      else Player.next();
-    }
+    if(!isFinite(d)||d<=0||!Player.playing) return;
+    if(audioEl.currentTime>=d-0.12) trackFinished();
   }catch(e){}
 });
 function syncPlayerUI(){
@@ -869,7 +889,7 @@ function syncPlayerUI(){
   if(!s){ mp.hidden=true; return; }
   mp.hidden=false;
   updateMediaSession();
-  $("#mpCover").style.cssText=s.coverUrl?("background-image:url('"+s.coverUrl.replace(/'/g,"%27")+"');background-size:cover;background-position:center"):coverStyle(s.hue||hueFor(s.title));
+  $("#mpCover").style.cssText=s.coverUrl?("background-image:url('"+cssUrl(s.coverUrl)+"');background-size:cover;background-position:center"):coverStyle(s.hue||hueFor(s.title));
   $("#mpCover").textContent=s.coverUrl?"":s.title.charAt(0).toUpperCase();
   $("#mpTitle").textContent=s.title; $("#mpArtist").textContent=s.artist;
   $("#mpPlay").innerHTML=Player.playing?IC.pause:IC.play;
@@ -880,7 +900,7 @@ function syncPlayerUI(){
     fc.style.cssText=grad; fc.textContent=letter;
     if(s.coverUrl){
       const im=new Image(); const sid=s.id;
-      im.onload=()=>{ const c=Player.song(); if(c&&c.id===sid){ fc.style.cssText="background-image:url('"+s.coverUrl.replace(/'/g,"%27")+"');background-size:cover;background-position:center"; fc.textContent=""; } };
+      im.onload=()=>{ const c=Player.song(); if(c&&c.id===sid){ fc.style.cssText="background-image:url('"+cssUrl(s.coverUrl)+"');background-size:cover;background-position:center"; fc.textContent=""; } };
       im.src=s.coverUrl;
     }
     $("#fpTitle").textContent=s.title; $("#fpArtist").textContent=s.worshiper?("🙏 "+s.worshiper):s.artist;
@@ -919,11 +939,14 @@ function updateMediaSession(){
   },1000);
 })();
 let showRemaining=true;
+let seekDrag=false;
+["pointerdown","touchstart"].forEach(ev=>$("#fpSeek").addEventListener(ev,()=>{ seekDrag=true; },{passive:true}));
+["pointerup","touchend","pointercancel","change"].forEach(ev=>$("#fpSeek").addEventListener(ev,()=>{ setTimeout(()=>{ seekDrag=false; },150); }));
 $("#fpDur").addEventListener("click",()=>{ showRemaining=!showRemaining; });
 setInterval(()=>{
   const s=Player.song(); if(!s) return;
   const p=Player.pos(), d=Player.dur();
-  $("#fpSeek").value = d>0 ? Math.round(p/d*1000) : 0;
+  if(!seekDrag) $("#fpSeek").value = d>0 ? Math.round(p/d*1000) : 0;
   const pc=d>0?p/d*100:0; $("#fpSeek").style.background="linear-gradient(90deg,#fff "+pc+"%,#535353 "+pc+"%)"; const mb=$("#mpBar i"); if(mb) mb.style.width=pc+"%";
   $("#fpCur").textContent=fmtT(p);
   $("#fpDur").textContent=(showRemaining&&d>0)?fmtT(Math.max(0,d-p)):fmtT(d);
@@ -932,16 +955,16 @@ setInterval(()=>{
 /* ================= UI: ARTIST PAGE ================= */
 function openArtist(name){
   const list=S.sbSongs.filter(s=>(s.artist||"")===name);
-  const ah=$("artistHead");
+  const ah=$("#artistHead");
   ah.innerHTML='<button class="btn ghost small" id="artistBack">\u2039 '+t("back")+'</button>'
     +'<h2 style="margin:12px 0 2px">'+esc(name)+'</h2>'
     +'<p class="muted" style="margin-bottom:10px">'+list.length+' '+t("songs")+'</p>'
     +(list.length?'<button class="btn small" id="artistPlayAll">\u25B6 '+t("playAll")+'</button>':"");
-  const al=$("artistList"); al.innerHTML="";
+  const al=$("#artistList"); al.innerHTML="";
   if(!list.length) al.innerHTML='<p class="muted">'+t("noSongs")+'</p>';
   list.forEach((s,i)=>al.appendChild(songRow(s,list,i)));
-  $("artistBack").addEventListener("click",()=>switchTab("home"));
-  const pa=$("artistPlayAll"); if(pa) pa.addEventListener("click",()=>Player.playQueue(list,0));
+  $("#artistBack").addEventListener("click",()=>switchTab("home"));
+  const pa=$("#artistPlayAll"); if(pa) pa.addEventListener("click",()=>Player.playQueue(list,0));
   switchTab("artist");
 }
 
@@ -960,7 +983,7 @@ function songRow(s, queue, idx){
   const b=document.createElement("button"); b.className="srow";
   const locked=disabledIds.has(s.id);
   if(locked) b.style.opacity=".45";
-  b.innerHTML='<div class="cover" style="'+(s.coverUrl?'background-image:url(\''+esc(s.coverUrl)+'\');background-size:cover;background-position:center':coverStyle(s.hue||hueFor(s.title)))+'">'+(s.coverUrl?'':esc(s.title.charAt(0).toUpperCase()))+'</div>'
+  b.innerHTML='<div class="cover" style="'+(s.coverUrl?'background-image:url(\''+esc(cssUrl(s.coverUrl))+'\');background-size:cover;background-position:center':coverStyle(s.hue||hueFor(s.title)))+'">'+(s.coverUrl?'':esc(s.title.charAt(0).toUpperCase()))+'</div>'
     +'<div class="mi"><b>'+esc(s.title)+(locked?' 🔒':'')+'</b><span data-act="artist" style="text-decoration:underline dotted;text-underline-offset:3px">'+(s.worshiper?'🙏 '+esc(s.worshiper):esc(s.artist))+'</span></div>'
     +'<span class="icobtn '+(favs.includes(s.id)?"fav":"")+'" data-act="fav">'+heart(favs.includes(s.id))+'</span>'
     +'<span class="icobtn" data-act="dl">'+IC.dl+'</span>'
@@ -993,11 +1016,11 @@ function renderHome(){
   $("#greet").textContent=(h<12?t("greetM"):h<17?t("greetA"):t("greetE"))+" 👋";
   // new uploads shelf (art cards)
   const nr=$("#homeNewRow"); nr.innerHTML="";
-  const nu=S.sbSongs.slice(-10).reverse();
+  const nu=S.sbSongs.slice(0,10);
   if(!nu.length) nr.innerHTML='<p class="muted">'+t("empty")+'</p>';
   nu.forEach(s=>{
     const d=document.createElement("button"); d.className="artcard";
-    const art=s.coverUrl?("background-image:url('"+s.coverUrl.replace(/'/g,"%27")+"');background-size:cover;background-position:center"):coverStyle(s.hue||hueFor(s.title));
+    const art=s.coverUrl?("background-image:url('"+cssUrl(s.coverUrl)+"');background-size:cover;background-position:center"):coverStyle(s.hue||hueFor(s.title));
     d.innerHTML='<div class="art" style="'+art+'">'+(s.coverUrl?"":esc(s.title.charAt(0).toUpperCase()))+'</div>'
       +'<span class="t">'+esc(s.title)+'</span><span class="a">'+esc(s.worshiper||s.artist)+'</span>';
     d.addEventListener("click",()=>openFullPlayer(s,nu));
@@ -1055,7 +1078,7 @@ function renderLibrary(){
       if(confirm(p.name+"?")){ playlists=playlists.filter(x=>x.id!==p.id); savePls(); renderLibrary(); renderHome(); toast(t("plDeleted")); }
     });
     btns.append(play,rn,del); d.appendChild(btns);
-    songs.slice(0,4).forEach((s,i)=>{
+    (p._all?songs:songs.slice(0,4)).forEach((s,i)=>{
       const r=songRow(s,songs,i);
       r.querySelector('[data-act="more"]').outerHTML='<span class="icobtn" data-act="rm">✕</span>';
       r.addEventListener("click",e=>{
@@ -1063,6 +1086,7 @@ function renderLibrary(){
       },true);
       d.appendChild(r);
     });
+    if(songs.length>4){ const mb=document.createElement("button"); mb.className="btn small ghost"; mb.textContent=p._all?"▲":("▼ "+songs.length); mb.addEventListener("click",()=>{ p._all=!p._all; renderLibrary(); }); d.appendChild(mb); }
     pl.appendChild(d);
   });
   // local device audio
@@ -1263,7 +1287,7 @@ async function loadApproved(){
     const {data,error}=await supa.from("songs").select("*").eq("status","approved").order("created_at",{ascending:false});
     if(error) throw error;
     S.sbSongs=(data||[]).map(sbToSong);
-  }catch(e){ /* RLS/network: stay silent, built-ins still work */ }
+  }catch(e){ if(navigator.onLine) toast(t("errNet")); }
   renderHome(); renderSearchList($("#searchInput").value);
 }
 async function loadMyUploads(){
@@ -1301,7 +1325,7 @@ async function loadServerDownloads(){
 async function refreshAfterAuth(){
   S.oauthError=null;
   await fetchProfile(); updatePremium(); await loadServerDownloads(); await refreshDisabled();
-  await loadMyUploads(); await loadPending(); await loadNotifs(); renderAccount();
+  await loadMyUploads(); await loadMyApp(); await loadPending(); await loadApps(); await loadNotifs(); renderAccount();
 }
 async function loadNotifs(){
   S.notifs=[];
@@ -1344,7 +1368,7 @@ function renderAuth(){
   if(!supa){ box.innerHTML='<div class="card"><p class="muted">'+t("serverDown")+'</p></div>'; return; }
   if(S.user){
     const d=document.createElement("div"); d.className="card";
-    d.innerHTML='<h3>'+t("myAccount")+(S.profile&&S.profile.is_admin?' <span class="pill p">'+t("admin")+'</span>':"")+'</h3>'
+    d.innerHTML='<h3>'+t("myAccount")+(S.profile&&S.profile.is_admin?' <span class="pill p">'+t("admin")+'</span>':(S.profile&&S.profile.is_artist?' <span class="pill a">✓ '+t("artist")+'</span>':""))+'</h3>'
       +'<div class="kv"><span>'+t("email")+'</span><b>'+esc(S.user.email||"")+'</b></div>'
       +'<div class="kv"><span>'+t("signUp")+'</span><b>'+esc((S.profile&&S.profile.display_name)||"—")+'</b></div>';
     const out=document.createElement("button"); out.className="btn ghost"; out.textContent=t("signOut");
@@ -1433,140 +1457,253 @@ async function uploadFileProgress(bucket, path, file, onProgress){
     }catch(e){ reject(e); }
   });
 }
+/* ================= ARTISTS: APPLY, VERIFY, UPLOAD ================= */
+const MAX_AUDIO_MB = 50;
+/* true  = verified artists publish instantly (admins can still delete songs)
+   false = every artist song waits for admin approval first */
+const ARTIST_AUTO_PUBLISH = true;
+function uploadStatus(){ return ((S.profile && S.profile.is_admin) || ARTIST_AUTO_PUBLISH) ? "approved" : "pending"; }
+function fmtMB(b){ return (b/1048576).toFixed(1)+" MB"; }
+function isAudioFile(f){ return /^audio\//.test(f.type||"") || /\.(mp3|m4a|wav|ogg|aac|opus|flac|wma)$/i.test(f.name||""); }
+function niceTitle(n){ return (n||"").replace(/\.[^.]+$/,"").replace(/[_\-]+/g," ").replace(/\s+/g," ").trim(); }
+function safeKey(n){ return (n||"file").replace(/[^\w.\-]+/g,"_"); }
+const UP_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0l-4 4m4-4l4 4M5 20h14"/></svg>';
+
+async function loadMyApp(){
+  S.myApp=null;
+  if(!supa||!S.user) return;
+  try{
+    const {data}=await supa.from("artist_applications").select("*").eq("user_id",S.user.id).maybeSingle();
+    S.myApp=data||null;
+  }catch(e){}
+}
+async function loadApps(){
+  S.apps=[];
+  if(!supa||!S.profile||!S.profile.is_admin) return;
+  try{
+    const {data}=await supa.from("artist_applications").select("*").eq("status","pending").order("created_at",{ascending:true});
+    S.apps=data||[];
+  }catch(e){}
+}
+async function insertSong(o){
+  let r=await supa.from("songs").insert(o).select("id");
+  if(r.error && /lyrics|worshiper|cover_url|release_date/i.test(r.error.message||"")){
+    const o2=Object.assign({},o); ["lyrics","worshiper","cover_url","release_date"].forEach(k=>delete o2[k]);
+    r=await supa.from("songs").insert(o2).select("id");
+  }
+  if(r.error) throw r.error;
+  return (r.data&&r.data[0])?r.data[0].id:null;
+}
+function upErrText(e){
+  const m=(e&&e.message)||"";
+  if(/artist_only|row-level security|permission|not allowed/i.test(m)) return t("errPerm");
+  return m||t("errUpload");
+}
+
 function renderUploadBox(){
   const box=$("#uploadBox"); box.innerHTML="";
-  if(!supa||!S.user||!S.profile||!(S.profile.is_admin||S.profile.is_artist)) return;  const d=document.createElement("div"); d.className="card";
-  d.innerHTML='<h3>🎵 '+t("uploadTitle")+'</h3>'
-    +'<div class="fld"><label>'+t("fTitle")+'</label><input id="uTitle"></div>'
-    +'<div class="fld"><label>'+t("fArtist")+'</label><input id="uArtist"></div>'
-    +'<div class="fld"><label>'+t("fWorshiper")+'</label><input id="uWorshiper" placeholder="'+t("fWorshiperPh")+'"></div>'
-    +'<div class="fld"><label>'+t("fCover")+'</label><input id="uCover" type="file" accept="image/*"></div>'
-    +'<div class="fld"><label>'+t("fDate")+'</label><input id="uDate" type="date"></div>'
-    +'<div class="fld"><label>'+t("fLyrics")+'</label><textarea id="uLyrics"></textarea></div>'
-    +'<div class="fld"><label>'+t("fAudio")+'</label><input id="uFile" type="file" accept="audio/*,.mp3,.m4a,.wav,.ogg,.aac,.opus,.flac,.wma"></div>'
-    +'<button class="btn" id="uGo">'+t("fSubmit")+'</button><p class="note" id="uNote"></p>';
+  if(!supa) return;
+  if(!S.user){
+    const d=document.createElement("div"); d.className="card wiz";
+    d.innerHTML='<h3>🎤 '+t("beArtist")+'</h3><p class="note">'+t("beArtistSignIn")+'</p>';
+    box.appendChild(d); return;
+  }
+  if(!S.profile) return;
+  if(S.profile.is_admin||S.profile.is_artist){ renderWizard(box); renderBulkBox(box); }
+  else renderApplyBox(box);
+}
+
+/* ---- step 1: a normal account applies to become a verified artist ---- */
+function renderApplyBox(box){
+  const app=S.myApp, d=document.createElement("div"); d.className="card wiz";
+  if(app && app.status==="pending"){
+    d.innerHTML='<h3>🎤 '+t("beArtist")+' <span class="pill p">'+t("stPending")+'</span></h3>'
+      +'<p class="note">'+t("aPending")+'</p>'
+      +'<div class="kv"><span>'+t("aName")+'</span><b>'+esc(app.artist_name)+'</b></div>'
+      +'<div class="kv"><span>'+t("aContact")+'</span><b>'+esc(app.contact)+'</b></div>';
+    box.appendChild(d); return;
+  }
+  const rejected=!!(app&&app.status==="rejected");
+  const v=k=>esc((app&&app[k])||"");
+  d.innerHTML='<h3>🎤 '+t("beArtist")+'</h3><p class="note">'+t("beArtistSub")+'</p>'
+    +(rejected?'<p class="note warn">'+t("aRejected")+'</p>':"")
+    +'<div class="fld"><label>'+t("aName")+' *</label><input id="apName" maxlength="120" value="'+v("artist_name")+'"></div>'
+    +'<div class="fld"><label>'+t("aContact")+' *</label><input id="apContact" maxlength="120" value="'+v("contact")+'"></div>'
+    +'<div class="fld"><label>'+t("aLink")+'</label><input id="apLink" type="url" maxlength="300" placeholder="https://" value="'+v("link")+'"></div>'
+    +'<div class="fld"><label>'+t("aMsg")+'</label><textarea id="apMsg" maxlength="1000">'+v("message")+'</textarea></div>'
+    +'<button class="btn" id="apSend">'+t("aSend")+'</button><p class="note" id="apNote"></p>';
   box.appendChild(d);
-  d.querySelector("#uFile").addEventListener("change",(e)=>{
-    const f=e.target.files[0];
-    d.querySelector("#uNote").textContent=f?("🎵 "+f.name):"";
-  });
-  d.querySelector("#uGo").addEventListener("click",async()=>{
-    const title=d.querySelector("#uTitle").value.trim(),
-          artist=d.querySelector("#uArtist").value.trim(),
-          worshiper=d.querySelector("#uWorshiper").value.trim()||null,
-          date=d.querySelector("#uDate").value||null,
-          lyrics=d.querySelector("#uLyrics").value.trim()||null,
-          file=d.querySelector("#uFile").files[0],
-          coverFile=d.querySelector("#uCover").files[0],
-          note=d.querySelector("#uNote"), btn=d.querySelector("#uGo");
-    if(!title||!file||(!artist&&!worshiper)){ note.textContent=t("errUpload"); return; }
+  d.querySelector("#apSend").addEventListener("click",async()=>{
+    const note=d.querySelector("#apNote"), btn=d.querySelector("#apSend");
+    const name=d.querySelector("#apName").value.trim(), contact=d.querySelector("#apContact").value.trim();
+    let link=d.querySelector("#apLink").value.trim(); const msg=d.querySelector("#apMsg").value.trim();
+    note.classList.remove("warn");
+    if(!name||!contact){ note.classList.add("warn"); note.textContent="⚠ "+t("aNeed"); return; }
+    if(link && !/^https?:\/\//i.test(link)) link="https://"+link;
+    const row={artist_name:name,contact:contact,link:link||null,message:msg||null,status:"pending",email:S.user.email||null};
     btn.disabled=true; note.textContent="⏳";
     try{
-      const path=S.user.id+"/"+Date.now()+"_"+file.name.replace(/[^\w.\-]+/g,"_");
-      await uploadFileProgress("songs-audio",path,file,(pct)=>{ note.textContent="⏳ "+pct+"%"; });
-      const {data:u}=supa.storage.from("songs-audio").getPublicUrl(path);
-      let coverUrl=null;
-      if(coverFile){
-        const cpath=S.user.id+"/covers/"+Date.now()+"_"+coverFile.name.replace(/[^\w.\-]+/g,"_");
-        try{ await uploadFileProgress("songs-audio",cpath,coverFile,null); coverUrl=supa.storage.from("songs-audio").getPublicUrl(cpath).data.publicUrl; }catch(e){}
-      }
-      const base={title:title,artist_name:(artist||worshiper||"Unknown"),worshiper:worshiper,cover_url:coverUrl,release_date:date,audio_url:u.publicUrl,uploader_id:S.user.id,status:"approved"};
-      let ins=await supa.from("songs").insert(Object.assign({lyrics:lyrics},base));
-      if(ins.error && /lyrics|worshiper|cover_url/i.test(ins.error.message||"")){
-        const retry=Object.assign({},base); delete retry.lyrics; delete retry.worshiper; delete retry.cover_url;
-        ins=await supa.from("songs").insert(Object.assign({lyrics:lyrics},retry));
-        if(ins.error && /lyrics|worshiper|cover_url/i.test(ins.error.message||"")) ins=await supa.from("songs").insert(retry);
-      }
-      if(ins.error) throw ins.error;
-      note.textContent=""; toast(t("songSubmitted"));
-      d.querySelector("#uTitle").value=""; d.querySelector("#uArtist").value="";
-      d.querySelector("#uWorshiper").value=""; d.querySelector("#uCover").value="";
-      d.querySelector("#uDate").value=""; d.querySelector("#uLyrics").value=""; d.querySelector("#uFile").value="";
-      await loadMyUploads(); await loadApproved();
-      renderMyUploadsBox(); renderHome();
-    }catch(e){ note.textContent="⚠ "+(e.message||t("errUpload")); }
-    btn.disabled=false;
+      const r=app ? await supa.from("artist_applications").update(row).eq("id",app.id)
+                  : await supa.from("artist_applications").insert(Object.assign({user_id:S.user.id},row));
+      if(r.error) throw r.error;
+      await loadMyApp(); renderUploadBox(); toast(t("aSent"));
+    }catch(e){ btn.disabled=false; note.classList.add("warn"); note.textContent="⚠ "+t("aErr"); }
   });
-  /* bulk upload */
-  const b2=document.createElement("div"); b2.className="card";
-  b2.innerHTML='<h3>🎵🎵 '+t("bulkTitle")+'</h3>'
-    +'<p class="note">'+t("bulkHelp")+'</p>'
-    +'<div class="fld"><label>'+t("bulkArtist")+'</label><input id="bArtist"></div>'
+}
+
+/* ---- step 2: verified artists get the upload wizard ---- */
+function renderWizard(box){
+  const live=uploadStatus()==="approved";
+  const d=document.createElement("div"); d.className="card wiz";
+  const artistDefault=(S.myApp&&S.myApp.artist_name)||(S.profile&&S.profile.display_name)||"";
+  d.innerHTML='<h3>🎤 '+t("upHeader")+'</h3>'
+    +'<p class="note">'+t(live?"upIntroLive":"upIntroReview")+'</p>'
+    +'<div class="step"><span class="stepn">1</span><b>'+t("step1")+'</b></div>'
+    +'<label class="drop" id="uDrop" for="uFile">'+UP_SVG+'<b id="uDropT">'+t("pickAudio")+'</b><small id="uDropS">'+t("pickAudioSub")+'</small></label>'
+    +'<input class="vh" id="uFile" type="file" accept="audio/*,.mp3,.m4a,.wav,.ogg,.aac,.opus,.flac,.wma">'
+    +'<audio class="prev" id="uPrev" controls preload="metadata" style="display:none"></audio>'
+    +'<div class="step"><span class="stepn">2</span><b>'+t("step2")+'</b></div>'
+    +'<div class="fld"><label>'+t("fTitle")+' *</label><input id="uTitle" maxlength="120"></div>'
+    +'<div class="fld"><label>'+t("fArtist")+' *</label><input id="uArtist" maxlength="120" value="'+esc(artistDefault)+'"></div>'
+    +'<div class="fld"><label>'+t("fWorshiper")+'</label><input id="uWorshiper" maxlength="120" placeholder="'+esc(t("fWorshiperPh"))+'"></div>'
+    +'<div class="step"><span class="stepn">3</span><b>'+t("step3")+'</b></div>'
+    +'<div class="fld"><label>'+t("fCover")+'</label><input id="uCover" type="file" accept="image/*"></div>'
+    +'<div class="fld"><label>'+t("fLyrics")+'</label><textarea id="uLyrics" maxlength="20000"></textarea></div>'
+    +'<label class="chk"><input type="checkbox" id="uRights"><span>'+t("rightsChk")+'</span></label>'
+    +'<div class="prog" id="uProg"><i></i></div>'
+    +'<button class="btn" id="uGo">'+t("publish")+'</button><p class="note" id="uNote"></p>';
+  box.appendChild(d);
+  const q=s=>d.querySelector(s);
+  let prevUrl=null;
+  q("#uPrev").addEventListener("play",()=>{ if(Player.playing) Player.toggle(); });
+  q("#uFile").addEventListener("change",e=>{
+    const f=e.target.files[0], note=q("#uNote"), drop=q("#uDrop"), prev=q("#uPrev");
+    note.textContent=""; note.classList.remove("warn");
+    if(prevUrl){ URL.revokeObjectURL(prevUrl); prevUrl=null; }
+    prev.style.display="none"; prev.removeAttribute("src");
+    if(!f){ drop.classList.remove("ok"); q("#uDropT").textContent=t("pickAudio"); q("#uDropS").textContent=t("pickAudioSub"); return; }
+    let bad="";
+    if(!isAudioFile(f)) bad=t("upNotAudio"); else if(f.size>MAX_AUDIO_MB*1048576) bad=t("upTooBig");
+    if(bad){
+      e.target.value=""; drop.classList.remove("ok");
+      q("#uDropT").textContent=t("pickAudio"); q("#uDropS").textContent=t("pickAudioSub");
+      note.classList.add("warn"); note.textContent="⚠ "+bad; return;
+    }
+    drop.classList.add("ok");
+    q("#uDropT").textContent="✓ "+t("pickedAudio"); q("#uDropS").textContent=f.name+" · "+fmtMB(f.size);
+    prevUrl=URL.createObjectURL(f); prev.src=prevUrl; prev.style.display="block";
+    const ti=q("#uTitle"); if(!ti.value.trim()) ti.value=niceTitle(f.name);
+  });
+  q("#uGo").addEventListener("click",async()=>{
+    const note=q("#uNote"), btn=q("#uGo"), prog=q("#uProg"), bar=prog.firstElementChild;
+    const title=q("#uTitle").value.trim(), artist=q("#uArtist").value.trim(),
+          worshiper=q("#uWorshiper").value.trim()||null, lyrics=q("#uLyrics").value.trim()||null,
+          file=q("#uFile").files[0], coverFile=q("#uCover").files[0];
+    note.classList.add("warn");
+    if(!navigator.onLine){ note.textContent="⚠ "+t("offlineUp"); return; }
+    if(!file){ note.textContent="⚠ "+t("upNeedAudio"); return; }
+    if(!title){ note.textContent="⚠ "+t("upNeedTitle"); return; }
+    if(!artist&&!worshiper){ note.textContent="⚠ "+t("upNeedArtist"); return; }
+    if(!q("#uRights").checked){ note.textContent="⚠ "+t("upNeedRights"); return; }
+    note.classList.remove("warn"); btn.disabled=true; prog.style.display="block"; bar.style.width="0";
+    let path=null, inserted=false, newId=null;
+    try{
+      path=S.user.id+"/"+Date.now()+"_"+safeKey(file.name);
+      note.textContent="⏳ "+t("uploading")+" 0%";
+      await uploadFileProgress("songs-audio",path,file,pct=>{ bar.style.width=pct+"%"; note.textContent="⏳ "+t("uploading")+" "+pct+"%"; });
+      const audioUrl=supa.storage.from("songs-audio").getPublicUrl(path).data.publicUrl;
+      let coverUrl=null;
+      if(coverFile && coverFile.size<8*1048576){
+        try{
+          const cp=S.user.id+"/covers/"+Date.now()+"_"+safeKey(coverFile.name);
+          await uploadFileProgress("songs-audio",cp,coverFile,null);
+          coverUrl=supa.storage.from("songs-audio").getPublicUrl(cp).data.publicUrl;
+        }catch(e){}
+      }
+      newId=await insertSong({title:title,artist_name:(artist||worshiper||"Unknown"),worshiper:worshiper,cover_url:coverUrl,lyrics:lyrics,audio_url:audioUrl,uploader_id:S.user.id,status:uploadStatus()});
+      inserted=true;
+    }catch(e){
+      if(path&&!inserted){ try{ await supa.storage.from("songs-audio").remove([path]); }catch(_){} }
+      btn.disabled=false; prog.style.display="none";
+      note.classList.add("warn"); note.textContent="⚠ "+upErrText(e); return;
+    }
+    await loadMyUploads(); await loadApproved();
+    showUploadDone(d,title,newId); renderMyUploadsBox();
+  });
+}
+function showUploadDone(d,title,id){
+  const live=uploadStatus()==="approved";
+  d.className="card okcard";
+  d.innerHTML='<div style="font-size:48px">🎉</div><h3>'+t(live?"songLive":"songSubmitted")+'</h3><p class="note">'+esc(title)+'</p>'
+    +(live?'<button class="btn" id="dPlay">▶ '+t("listenNow")+'</button>':"")
+    +'<button class="btn ghost" id="dAgain">'+t("upAnother")+'</button>';
+  const pl=d.querySelector("#dPlay");
+  if(pl) pl.addEventListener("click",()=>{ const s=S.sbSongs.find(x=>String(x.sbid)===String(id)); if(s) openFullPlayer(s,[s]); });
+  d.querySelector("#dAgain").addEventListener("click",()=>renderUploadBox());
+}
+
+/* ---- many songs at once (album) ---- */
+function renderBulkBox(box){
+  const b2=document.createElement("details"); b2.className="card more";
+  b2.innerHTML='<summary>🎵🎵 '+t("manyTitle")+'</summary>'
+    +'<p class="note" style="margin-top:8px">'+t("bulkHelp")+'</p>'
+    +'<div class="fld"><label>'+t("bulkArtist")+'</label><input id="bArtist" value="'+esc((S.myApp&&S.myApp.artist_name)||"")+'"></div>'
     +'<div class="fld"><label>'+t("bulkWorshiper")+'</label><input id="bWorshiper"></div>'
-    +'<div class="fld"><label>'+t("bulkPlaylist")+'</label><input id="bPlaylist" placeholder="'+t("bulkPlaylistPh")+'"></div>'
+    +'<div class="fld"><label>'+t("bulkPlaylist")+'</label><input id="bPlaylist" placeholder="'+esc(t("bulkPlaylistPh"))+'"></div>'
     +'<div class="fld"><label>'+t("fAudio")+'</label><input id="bFiles" type="file" accept="audio/*,.mp3,.m4a,.wav,.ogg,.aac,.opus,.flac,.wma" multiple></div>'
     +'<div class="fld"><label>'+t("bulkPhotos")+'</label><input id="bPhotos" type="file" accept="image/*" multiple></div>'
     +'<div class="fld"><label>'+t("bulkLyrics")+'</label><input id="bLyrics" type="file" accept=".txt,.lrc,text/plain" multiple></div>'
+    +'<label class="chk"><input type="checkbox" id="bRights"><span>'+t("rightsChk")+'</span></label>'
     +'<button class="btn" id="bGo">'+t("bulkGo")+'</button><p class="note" id="bNote"></p>';
   box.appendChild(b2);
-  b2.querySelector("#bFiles").addEventListener("change",(e)=>{
-    const n=e.target.files.length;
-    b2.querySelector("#bNote").textContent=n?(n+" 🎵 selected"):"";
-  });
-  b2.querySelector("#bGo").addEventListener("click",async()=>{
-    const artist=b2.querySelector("#bArtist").value.trim(),
-          worshiper=b2.querySelector("#bWorshiper").value.trim()||null,
-          plName=b2.querySelector("#bPlaylist").value.trim(),
-          files=b2.querySelector("#bFiles").files,
-          photoFiles=b2.querySelector("#bPhotos").files,
-          lyricFiles=b2.querySelector("#bLyrics").files,
-          note=b2.querySelector("#bNote"), btn=b2.querySelector("#bGo");
-    if(!files.length||(!artist&&!worshiper)){ note.textContent=t("errUpload"); return; }
-    btn.disabled=true;
+  const q=s=>b2.querySelector(s);
+  q("#bFiles").addEventListener("change",e=>{ const n=e.target.files.length; q("#bNote").textContent=n?(n+" 🎵"):""; });
+  q("#bGo").addEventListener("click",async()=>{
+    const artist=q("#bArtist").value.trim(), worshiper=q("#bWorshiper").value.trim()||null, plName=q("#bPlaylist").value.trim(),
+          files=Array.from(q("#bFiles").files), photoFiles=Array.from(q("#bPhotos").files), lyricFiles=Array.from(q("#bLyrics").files),
+          note=q("#bNote"), btn=q("#bGo");
+    note.classList.add("warn");
+    if(!navigator.onLine){ note.textContent="⚠ "+t("offlineUp"); return; }
+    if(!files.length){ note.textContent="⚠ "+t("upNeedAudio"); return; }
+    if(!artist&&!worshiper){ note.textContent="⚠ "+t("upNeedArtist"); return; }
+    if(files.some(f=>!isAudioFile(f))){ note.textContent="⚠ "+t("upNotAudio"); return; }
+    if(files.some(f=>f.size>MAX_AUDIO_MB*1048576)){ note.textContent="⚠ "+t("upTooBig"); return; }
+    if(!q("#bRights").checked){ note.textContent="⚠ "+t("upNeedRights"); return; }
+    note.classList.remove("warn"); btn.disabled=true;
     /* match photos/lyrics to songs by file name (melkam-neh.mp3 + melkam-neh.jpg + melkam-neh.txt) */
     const baseKey=n=>(n||"").replace(/\.[^.]+$/,"").toLowerCase().replace(/[^a-z0-9\u1200-\u137f]+/g,"");
     const photoMap={}, lyrMap={};
-    for(const f of photoFiles){ const k=baseKey(f.name); if(k&&!photoMap[k]) photoMap[k]=f; }
-    for(const f of lyricFiles){ const k=baseKey(f.name); if(k&&!lyrMap[k]) lyrMap[k]=f; }
+    photoFiles.forEach(f=>{ const k=baseKey(f.name); if(k&&!photoMap[k]) photoMap[k]=f; });
+    lyricFiles.forEach(f=>{ const k=baseKey(f.name); if(k&&!lyrMap[k]) lyrMap[k]=f; });
     let ok=0, lastErr=""; const newIds=[];
     for(let i=0;i<files.length;i++){
-      const file=files[i];
+      const file=files[i]; let path=null, inserted=false;
       note.textContent=t("bulkProg")+" "+(i+1)+"/"+files.length+"…";
       try{
-        const title=file.name.replace(/\.[^.]+$/,"").replace(/[_\-]+/g," ").trim()||("Song "+(i+1));
-        const path=S.user.id+"/"+Date.now()+"_"+i+"_"+file.name.replace(/[^\w.\-]+/g,"_");
-        await uploadFileProgress("songs-audio",path,file,(pct)=>{ note.textContent=t("bulkProg")+" "+(i+1)+"/"+files.length+"… "+pct+"%"; });
-        const {data:u}=supa.storage.from("songs-audio").getPublicUrl(path);
-        /* matching cover photo + lyrics for this song */
-        const k=baseKey(file.name);
-        let coverUrl=null;
+        const title=niceTitle(file.name)||("Song "+(i+1));
+        path=S.user.id+"/"+Date.now()+"_"+i+"_"+safeKey(file.name);
+        await uploadFileProgress("songs-audio",path,file,pct=>{ note.textContent=t("bulkProg")+" "+(i+1)+"/"+files.length+"… "+pct+"%"; });
+        const audioUrl=supa.storage.from("songs-audio").getPublicUrl(path).data.publicUrl;
+        const k=baseKey(file.name); let coverUrl=null, lyrics=null;
         const pf=photoMap[k];
-        if(pf){
+        if(pf && pf.size<8*1048576){
           try{
-            const cpath=S.user.id+"/covers/"+Date.now()+"_"+i+"_"+pf.name.replace(/[^\w.\-]+/g,"_");
-            await uploadFileProgress("songs-audio",cpath,pf,null);
-            coverUrl=supa.storage.from("songs-audio").getPublicUrl(cpath).data.publicUrl;
+            const cp=S.user.id+"/covers/"+Date.now()+"_"+i+"_"+safeKey(pf.name);
+            await uploadFileProgress("songs-audio",cp,pf,null);
+            coverUrl=supa.storage.from("songs-audio").getPublicUrl(cp).data.publicUrl;
           }catch(e){}
         }
-        let lyrics=null;
         const lf=lyrMap[k];
-        if(lf){
-          try{ lyrics=(await lf.text()).replace(/\[\d{1,3}:\d{2}(\.\d{1,3})?\]/g,"").trim().slice(0,20000)||null; }catch(e){}
-        }
-        let insErr=null;
-        try{
-          const mk=(drop)=>{
-            const o={title:title,artist_name:(artist||worshiper||"Unknown"),worshiper:worshiper,audio_url:u.publicUrl,uploader_id:S.user.id,status:"approved"};
-            if(coverUrl) o.cover_url=coverUrl;
-            if(lyrics) o.lyrics=lyrics;
-            if(drop){ delete o.worshiper; delete o.cover_url; delete o.lyrics; }
-            return o;
-          };
-          const r1=await supa.from("songs").insert(mk(false)).select("id");
-          insErr=r1.error;
-          if(!insErr&&r1.data&&r1.data[0]) newIds.push("sb-"+r1.data[0].id);
-          if(insErr && /lyrics|worshiper|cover_url/i.test(insErr.message||"")){
-            const r2=await supa.from("songs").insert(mk(true)).select("id");
-            insErr=r2.error;
-            if(!insErr&&r2.data&&r2.data[0]) newIds.push("sb-"+r2.data[0].id);
-          }
-        }catch(e){ insErr=e; }
-        if(insErr) throw insErr;
-        ok++;
-      }catch(e){ lastErr=e.message||""; }
+        if(lf){ try{ lyrics=(await lf.text()).replace(/\[\d{1,3}:\d{2}(\.\d{1,3})?\]/g,"").trim().slice(0,20000)||null; }catch(e){} }
+        const id=await insertSong({title:title,artist_name:(artist||worshiper||"Unknown"),worshiper:worshiper,cover_url:coverUrl,lyrics:lyrics,audio_url:audioUrl,uploader_id:S.user.id,status:uploadStatus()});
+        inserted=true; if(id!=null) newIds.push("sb-"+id); ok++;
+      }catch(e){
+        lastErr=upErrText(e);
+        if(path&&!inserted){ try{ await supa.storage.from("songs-audio").remove([path]); }catch(_){} }
+      }
     }
-    note.textContent=lastErr&&!ok?("⚠ "+lastErr):""; btn.disabled=false;
-    b2.querySelector("#bArtist").value=""; b2.querySelector("#bWorshiper").value=""; b2.querySelector("#bPlaylist").value=""; b2.querySelector("#bFiles").value=""; b2.querySelector("#bPhotos").value=""; b2.querySelector("#bLyrics").value="";
+    btn.disabled=false; note.textContent=(lastErr&&!ok)?("⚠ "+lastErr):"";
+    ["#bFiles","#bPhotos","#bLyrics"].forEach(s=>{ q(s).value=""; }); q("#bPlaylist").value=""; q("#bRights").checked=false;
     await loadMyUploads(); await loadApproved();
     if(plName&&newIds.length){
       let p=playlists.find(x=>(x.name||"").toLowerCase()===plName.toLowerCase());
@@ -1575,28 +1712,77 @@ function renderUploadBox(){
       savePls();
     }
     renderMyUploadsBox(); renderLibrary(); renderHome();
-    toast(ok? t("bulkDone")+" ("+ok+"/"+files.length+")" : (lastErr?("⚠ "+lastErr):t("errUpload")));
+    toast(ok ? t(uploadStatus()==="approved"?"bulkDoneLive":"bulkDone")+" ("+ok+"/"+files.length+")" : ("⚠ "+(lastErr||t("errUpload"))));
   });
 }
 
+/* ---- my uploads (artist can delete their own songs) ---- */
 function renderMyUploadsBox(){
   const box=$("#myUploads"); box.innerHTML="";
   if(!supa||!S.user||!S.myUploads.length) return;
   const d=document.createElement("div"); d.className="card";
   const open=Store.get("egs_mu_open",false);
   const h=document.createElement("h3"); h.style.cursor="pointer";
-  h.innerHTML='📤 '+t("myUploads")+' <span style="float:right">'+(open?'▾':'▸')+'</span>';
+  h.innerHTML='📤 '+t("myUploads")+' ('+S.myUploads.length+') <span style="float:right">'+(open?'▾':'▸')+'</span>';
   d.appendChild(h);
   const body=document.createElement("div"); body.style.display=open?"":"none";
   const cls={pending:"p",approved:"a",rejected:"r"};
   const lbl={pending:t("stPending"),approved:t("stApproved"),rejected:t("stRejected")};
   S.myUploads.forEach(r=>{
     const row=document.createElement("div"); row.className="kv";
-    row.innerHTML='<span><b style="color:var(--txt)">'+esc(r.title)+'</b><br>'+esc(r.artist_name||"")+'</span><span class="pill '+(cls[r.status]||"p")+'">'+lbl[r.status]+'</span>';
+    row.innerHTML='<span><b style="color:var(--txt)">'+esc(r.title)+'</b><br>'+esc(r.artist_name||"")+'</span>'
+      +'<span style="display:flex;align-items:center;gap:6px"><span class="pill '+(cls[r.status]||"p")+'">'+esc(lbl[r.status]||r.status||"")+'</span>'
+      +'<button class="icobtn" aria-label="'+esc(t("myDelete"))+'">🗑</button></span>';
+    row.querySelector("button").addEventListener("click",()=>deleteSong(r.id,r.audio_url,r.cover_url));
     body.appendChild(row);
   });
   d.appendChild(body); box.appendChild(d);
   h.addEventListener("click",()=>{ Store.set("egs_mu_open",!open); renderMyUploadsBox(); });
+}
+
+/* ---- admin: artist applications ---- */
+function renderAppsCard(box){
+  const c=document.createElement("div"); c.className="card";
+  c.innerHTML='<h3>🎤 '+t("appsQ")+' ('+S.apps.length+')</h3>';
+  if(!S.apps.length) c.innerHTML+='<p class="muted">'+t("noApps")+'</p>';
+  S.apps.forEach(a=>{
+    const item=document.createElement("div");
+    const link=(a.link&&/^https?:\/\//i.test(a.link))?'<a href="'+esc(a.link)+'" target="_blank" rel="noopener" style="color:var(--gold);word-break:break-all">'+esc(a.link)+'</a>':esc(a.link||"—");
+    item.innerHTML='<div class="kv"><span>'+t("aName")+'</span><b>'+esc(a.artist_name)+'</b></div>'
+      +'<div class="kv"><span>'+t("email")+'</span><b style="word-break:break-all">'+esc(a.email||"")+'</b></div>'
+      +'<div class="kv"><span>'+t("aContact")+'</span><b>'+esc(a.contact)+'</b></div>'
+      +'<div class="kv"><span>Link</span><b>'+link+'</b></div>'
+      +(a.message?'<p class="note" style="margin:6px 0">'+esc(a.message)+'</p>':"");
+    const row=document.createElement("div"); row.className="row2";
+    const ok=document.createElement("button"); ok.className="btn small"; ok.textContent="✓ "+t("approve");
+    const no=document.createElement("button"); no.className="btn small ghost"; no.textContent="✕ "+t("reject");
+    ok.addEventListener("click",()=>decideApp(a,true)); no.addEventListener("click",()=>decideApp(a,false));
+    row.append(ok,no); item.appendChild(row);
+    const hr=document.createElement("div"); hr.className="hr"; item.appendChild(hr);
+    c.appendChild(item);
+  });
+  box.appendChild(c);
+}
+async function decideApp(a,ok){
+  try{
+    if(ok){ const {error:e1}=await supa.from("profiles").update({is_artist:true}).eq("id",a.user_id); if(e1) throw e1; }
+    const {error}=await supa.from("artist_applications").update({status:ok?"approved":"rejected"}).eq("id",a.id);
+    if(error) throw error;
+    toast(ok?t("artistGranted"):t("rejectedMsg"));
+    await loadApps(); renderAdminBox();
+  }catch(e){ toast(t("errPerm")); }
+}
+async function deleteSong(id,audioUrl,coverUrl){
+  if(!confirm(t("confirmDelete"))) return;
+  try{
+    const paths=[audioUrl,coverUrl].map(u=>((u||"").split("/songs-audio/")[1]||"").split("?")[0]).filter(Boolean).map(decodeURIComponent);
+    const {error}=await supa.from("songs").delete().eq("id",id);
+    if(error) throw error;
+    if(paths.length){ try{ await supa.storage.from("songs-audio").remove(paths); }catch(e){} }
+    toast(t("deletedMsg"));
+    await loadApproved(); await loadMyUploads();
+    renderAdminBox(); renderMyUploadsBox(); renderHome(); renderSearchList($("#searchInput").value);
+  }catch(e){ toast(t("errPerm")); }
 }
 
 async function doGrantPremium(days){
@@ -1652,6 +1838,7 @@ function renderAdminBox(){
     d.appendChild(item);
   });
   box.appendChild(d);
+  renderAppsCard(box);
   /* grant premium (admin) */
   const p=document.createElement("div"); p.className="card";
   p.innerHTML='<h3>⭐ '+t("grantPrem")+'</h3>'
@@ -1680,9 +1867,9 @@ function renderAdminBox(){
   if(!S.sbSongs.length) mb.innerHTML='<p class="muted">'+t("noSongs")+'</p>';
   S.sbSongs.forEach(r=>{
     const row=document.createElement("div"); row.className="kv";
-    row.innerHTML='<span><b style="color:var(--txt)">'+esc(r.title)+'</b><br>'+esc(r.artist_name||"")+'</span>';
+    row.innerHTML='<span><b style="color:var(--txt)">'+esc(r.title)+'</b><br>'+esc(r.artist||"")+'</span>';
     const del=document.createElement("button"); del.className="btn small ghost"; del.textContent="🗑 "+t("delete");
-    del.addEventListener("click",()=>deleteSong(r.id,r.audio_url));
+    del.addEventListener("click",()=>deleteSong(r.sbid,r.url,r.coverUrl));
     const wrap=document.createElement("span"); wrap.appendChild(del); row.appendChild(wrap);
     mb.appendChild(row);
   });
@@ -1702,19 +1889,6 @@ async function setStatus(id,status){
     await loadPending(); await loadApproved(); renderAdminBox();
   }catch(e){ toast(t("errPerm")); }
 }
-async function deleteSong(id,audioUrl){
-  if(!confirm(t("confirmDelete"))) return;
-  try{
-    const m=(audioUrl||"").split("/songs-audio/");
-    if(m[1]){ try{ await supa.storage.from("songs-audio").remove([decodeURIComponent(m[1].split("?")[0])]); }catch(e){} }
-    const {error}=await supa.from("songs").delete().eq("id",id);
-    if(error) throw error;
-    toast(t("deletedMsg"));
-    await loadApproved(); await loadMyUploads();
-    renderAdminBox(); renderHome(); renderSearchList("");
-  }catch(e){ toast(t("errPerm")); }
-}
-
 
 function renderPremBox(){
   const box=$("#premBox"); box.innerHTML="";
