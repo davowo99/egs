@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" type="image/png" href="icon-192.png">
 <title>ES — Ethiopian Songs</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{--bg:linear-gradient(180deg,#0b3d20 0%,#4d3f10 52%,#4d1518 100%);--card:#181818;--card2:#282828;--gold:#1DB954;--gold2:#1ED760;--txt:#ffffff;--mut:#b3b3b3;--line:#2a2a2a;--green:#1DB954;--red:#e0655f;--blue:#5f9de0}
@@ -225,10 +225,17 @@ body.is-playing #fpCover{animation:none}
 #fpCtrls svg{width:28px;height:28px}
 #fpPlayB{background:#fff!important;color:#000!important;display:flex;align-items:center;justify-content:center}
 #fpPlayB svg{width:30px;height:30px}
-#fpRepeat svg{width:24px;height:24px}
+#fpRepeat svg,#fpShuf svg,#fpSleep svg{width:24px;height:24px}
+#fpShuf.on,#fpRepeat.on,#fpSleep.on{color:var(--gold2);opacity:1!important}
 #fpLyrics{background:linear-gradient(160deg,#1f8a52,#14563a);border:0;border-radius:14px;padding:18px;font-size:19px;font-weight:700;line-height:1.55;color:#fff}
 #fpLyrics b{display:block;color:rgba(255,255,255,.7);font-size:13px;margin-bottom:6px}
 .shbtn svg{width:20px;height:20px}
+#offBanner{display:none;position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;z-index:70;background:#fff;color:#000;font:700 12px/1.3 system-ui,sans-serif;text-align:center;padding:calc(6px + env(safe-area-inset-top)) 10px 6px}
+#installRow{margin:4px 0 8px}
+.instPill{display:inline-flex;align-items:center;background:rgba(255,255,255,.14);border-radius:500px}
+.instPill button{display:flex;align-items:center;gap:7px;background:none;border:0;color:#fff;font-family:inherit;font-weight:700;font-size:13px;padding:9px 12px;cursor:pointer}
+.instPill svg{width:16px;height:16px}
+#installX{color:#b3b3b3;padding:9px 11px 9px 2px}
 </style>
 </head>
 <body>
@@ -240,13 +247,8 @@ body.is-playing #fpCover{animation:none}
 
   <main id="views">
     <section id="v-home" class="view">
-      <div id="installBanner" class="card" style="display:none;padding:10px 12px">
-        <div class="kv" style="margin:0">
-          <span>📲 <b data-i18n="installTitle">Download the app</b><br><span class="muted" style="font-size:12px" data-i18n="installSub">Add ES to your home screen</span></span>
-          <span style="display:flex;gap:6px;align-items:center"><button class="btn small" id="installBtn" data-i18n="install" style="margin:0;width:auto;padding:8px 16px">Install</button><button class="icobtn" id="installX">✕</button></span>
-        </div>
-      </div>
       <h2 id="greet" style="font-size:24px;font-weight:800;margin:6px 0 2px"></h2>
+      <div id="installRow" style="display:none"><div class="instPill"><button id="installBtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 20h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="installTitle">Download the app</span></button><button id="installX" type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div><p id="installHint" class="muted" style="display:none;font-size:12px;margin:6px 4px 0"></p></div>
       <div class="sec-t"><span data-i18n="newUploads">New uploads</span></div>
       <div class="hrow" id="homeNewRow"></div>
       <div class="sec-t"><span data-i18n="playlists">Playlists</span></div>
@@ -277,7 +279,6 @@ body.is-playing #fpCover{animation:none}
       <div id="myUploads"></div>
       <div id="adminBox"></div>
       <div id="premBox"></div>
-      <div id="supportBox"></div>
       <div id="extrasBox"></div>
     </section>
   </main>
@@ -304,6 +305,7 @@ body.is-playing #fpCover{animation:none}
     <input type="range" id="fpSeek" min="0" max="1000" value="0">
     <div id="fpTimes"><span id="fpCur">0:00</span><span id="fpDur">0:00</span></div>
     <div id="fpCtrls">
+      <button id="fpShuf" style="opacity:.45" aria-label="Shuffle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <button id="fpPrev"><svg viewBox="0 0 24 24" aria-hidden="true" ><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
       <button id="fpPlayB"><svg viewBox="0 0 24 24" aria-hidden="true" ><path d="M8 5v14l11-7z"/></svg></button>
       <button id="fpNext"><svg viewBox="0 0 24 24" aria-hidden="true" ><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button>
@@ -312,6 +314,7 @@ body.is-playing #fpCover{animation:none}
     <div id="fpActs">
       <button class="icobtn" id="fpFav" style="font-size:26px"><svg viewBox="0 0 24 24" aria-hidden="true" ><path d="M12 21s-8-5.4-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 5.6-8 11-8 11z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <button class="icobtn" id="fpDl" style="font-size:26px"><svg viewBox="0 0 24 24" aria-hidden="true" ><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 20h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button class="icobtn" id="fpSleep" style="font-size:26px" aria-label="Sleep timer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
     <div class="sec-t"><span data-i18n="lyrics">Lyrics</span></div>
     <div id="fpLyrics"></div>
@@ -333,6 +336,8 @@ try { if (window.supabase && window.supabase.createClient) supa = window.supabas
 const $ = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
 function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function botLink(){ return '<a href="https://t.me/egs_music_bot" target="_blank" style="color:var(--gold);font-weight:700">@egs_music_bot</a>'; }
+function escBot(s){ return esc(s).split("@egs_music_bot").join(botLink()); }
 let toastT=null;
 function toast(msg){ const el=$("#toast"); el.textContent=msg; el.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove("show"),2600); }
 function midiHz(m){ return 440*Math.pow(2,(m-69)/12); }
@@ -344,7 +349,7 @@ function coverStyle(hue){ return "background:linear-gradient(135deg,hsl("+hue+",
 
 /* ================= I18N ================= */
 const STR = {
-en:{tagline:"Ethiopian Songs",installTitle:"Download the app",installSub:"Add ES to your home screen",install:"Install",home:"Home",search:"Search",library:"Library",account:"Account",nowPlaying:"NOW PLAYING",
+en:{tagline:"Ethiopian Songs",installTitle:"Download the app",installSub:"Add ES to your home screen",install:"Install",iosHint:"Tap the Share button, then choose Add to Home Screen.",menuHint:"Open your browser menu, then choose Install app or Add to Home Screen.",home:"Home",search:"Search",library:"Library",account:"Account",nowPlaying:"NOW PLAYING",
 greetM:"Good morning",greetA:"Good afternoon",greetE:"Good evening",
 playlists:"Playlists",hymnsTitle:"Songs",newUploads:"New uploads",community:"Community uploads",forYou:"For you",allSongs:"All songs",
 searchPh:"Search songs or artists...",noResults:"No results found.",
@@ -362,7 +367,7 @@ support:"Support ES",telebirr:"Telebirr",cbe:"CBE bank account",copy:"Copy",copi
 tbSteps:"1. Open your telebirr app.\n2. Send to 0902070153 (Dawit).\n3. Open Telegram and send the payment screenshot to @egs_music_bot.",
 cbeNote:"Send to this account, then open Telegram and send the screenshot to @egs_music_bot.",
 premium:"ES Premium",perMonth:"99 birr / month",perYear:"990 birr / year",
-premNote:"Free downloads: up to 10 songs. Premium unlocks unlimited downloads and no ads. Pay with telebirr or CBE above, then send the screenshot on Telegram to @egs_music_bot — premium is activated manually. Please wait up to 48 hours for payment approval.",
+premNote:"Free downloads: up to 10 songs. Premium unlocks unlimited downloads and no ads. Pay with telebirr or CBE above, then send the screenshot to our Telegram bot <a href=\"https://t.me/egs_music_bot\" target=\"_blank\" style=\"color:var(--gold);font-weight:700\">@egs_music_bot</a> — it will guide you, and premium activates once approved.",
 premActive:"Premium is active",premStatus:"Premium active",daysLeft:"days left",premOffline:"Downloads are saved in the app and play even without internet.",premNeeded:"This song needs premium — renew to play it.",grantPrem:"Grant premium",premEmailPh:"User's email",prem30:"30 days",prem365:"1 year",premGranted:"Premium granted",userNotFound:"No account found with that email.",verifyTitle:"Check your email! 📧",verifySteps:"1. Open your email inbox\n2. Tap the confirmation link we sent you\n3. Come back here and log in",resend:"Resend email",resent:"Email sent again — check your inbox!",backToLogin:"Back to log in",
 privacy:"Privacy",help:"Help",report:"Report a problem",language:"Language",
 privacyTxt:"ES keeps your favorites, playlists and settings only on your device. If you create an account, your email and uploaded songs are stored securely on our servers and never shared with anyone.",
@@ -374,9 +379,9 @@ loading:"Loading...",serverDown:"Server unavailable — showing built-in hymns o
 errAuth:"Couldn't sign you in. Check your details and try again.",
 errUp:"Couldn't create the account. Try a different email.",
 errUpload:"Upload failed. Please try again.",errPerm:"You don't have permission for that.",
-signedIn:"Welcome!",signedOut:"Signed out.",myAccount:"My account",admin:"Admin",
+signedIn:"Welcome!",reportSong:"Report this song",sleepTimer:"Sleep timer",sleepOff:"Turn off timer",sleepEnd:"After this song",sleepMin:"minutes",sleepSet:"Timer set",sleepStopped:"Playback stopped",signedOut:"Signed out.",myAccount:"My account",admin:"Admin",
 plays:"plays",errNet:"Connection problem. Try again."},
-am:{tagline:"የኢትዮጵያ ዜማዎች",installTitle:"መተግበሪያውን አውርድ",installSub:"ESን ወደ መነሻ ማያ ገጽዎ ጨምር",install:"ጫን",home:"መነሻ",search:"ፍለጋ",library:"ላይብረሪ",account:"መለያ",nowPlaying:"አሁን እየተጫወተ",
+am:{tagline:"የኢትዮጵያ ዜማዎች",installTitle:"መተግበሪያውን አውርድ",installSub:"ESን ወደ መነሻ ማያ ገጽዎ ጨምር",install:"ጫን",iosHint:"የShare ቁልፉን ይንኩ፣ ከዚያ «ወደ መነሻ ማያ ገጽ ጨምር» ይምረጡ።",menuHint:"የአሳሽዎን ምናሌ ይክፈቱ፣ ከዚያ «መተግበሪያ ጫን» ወይም «ወደ መነሻ ማያ ገጽ ጨምር» ይምረጡ።",home:"መነሻ",search:"ፍለጋ",library:"ላይብረሪ",account:"መለያ",nowPlaying:"አሁን እየተጫወተ",
 greetM:"እንደምን አደሩ",greetA:"እንደምን ዋሉ",greetE:"እንደምን አመሹ",
 playlists:"የዘፈን ዝርዝሮች",hymnsTitle:"ዜማዎች",newUploads:"አዳዲስ ዜማዎች",community:"የማኅበረሰብ ስቅሎች",forYou:"ለእርስዎ",allSongs:"ሁሉም ዜማዎች",
 searchPh:"ዜማ ወይም ድምጻዊ ፈልግ...",noResults:"ምንም አልተገኘም።",
@@ -394,7 +399,7 @@ support:"ESን ይደግፉ",telebirr:"ቴሌብር",cbe:"የCBE የባንክ �
 tbSteps:"1. የቴሌብር መተግበሪያዎን ይክፈቱ።\n2. ወደ 0902070153 (ዳዊት) ይላኩ።\n3. ቴሌግራምን ይክፈቱ እና የክፍያ ስክሪንሾት ወደ @egs_music_bot ይላኩ።",
 cbeNote:"ወደዚህ ሂሳብ ይላኩ፣ ከዚያ ቴሌግራምን ይክፈቱ እና ስክሪንሾቱን ወደ @egs_music_bot ይላኩ።",
 premium:"ES ፕሪሚየም",perMonth:"99 ብር / በወር",perYear:"990 ብር / በዓመት",
-premNote:"ነጻ ማውረድ፡ እስከ 10 ዜማዎች። ፕሪሚየም ያልተገደበ ማውረድ እና ያለ ማስታወቂያ ይከፍታል። በቴሌብር ወይም CBE ከላይ ይክፈሉ፣ ከዚያ ስክሪንሾቱን በቴሌግራም ወደ @egs_music_bot ይላኩ — ፕሪሚየም በእጅ ይገብራል። እባክዎ ለክፍያ ማጽደቅ እስከ 48 ሰዓት ይጠብቁ።",
+premNote:"ነጻ ማውረድ፡ እስከ 10 ዜማዎች። ፕሪሚየም ያልተገደበ ማውረድ እና ያለ ማስታወቂያ ይከፍታል። በቴሌብር ወይም CBE ከላይ ይክፈሉ፣ ከዚያ ስክሪንሾቱን ወደ ቴሌግራም ቦታችን <a href=\"https://t.me/egs_music_bot\" target=\"_blank\" style=\"color:var(--gold);font-weight:700\">@egs_music_bot</a> ይላኩ — በእርምጃዎቹ ይመራዎታል፣ ፕሪሚየምም እንደጸደቀ ይገብራል።",
 premActive:"ፕሪሚየም ነቅቷል",premStatus:"ፕሪሚየም ነቅቷል",daysLeft:"ቀናት ቀርተዋል",premOffline:"ማውረዶች በመተግበሪያው ውስጥ ይቀመጣሉ እና ያለኢንተርኔትም ይጫወታሉ።",premNeeded:"ይህ ዜማ ፕሪሚየም ይፈልጋል — ለማጫወት ያድሱ።",grantPrem:"ፕሪሚየም ስጥ",premEmailPh:"የተጠቃሚው ኢሜይል",prem30:"30 ቀናት",prem365:"1 ዓመት",premGranted:"ፕሪሚየም ተሰጥቷል",userNotFound:"በዚያ ኢሜይል መለያ አልተገኘም።",verifyTitle:"ኢሜይልዎን ይመልከቱ! 📧",verifySteps:"1. የኢሜይል መልእክት ሳጥንዎን ይክፈቱ\n2. የላክነውን የማረጋገጫ ሊንክ ይንኩ\n3. ወደዚህ ተመልሰው ይግቡ",resend:"ኢሜይል እንደገና ላክ",resent:"ኢሜይል እንደገና ተልኳል — መልእክት ሳጥንዎን ይመልከቱ!",backToLogin:"ወደ መግቢያ ተመለስ",
 privacy:"ግላዊነት",help:"እርዳታ",report:"ችግር ሪፖርት አድርግ",language:"ቋንቋ",
 privacyTxt:"ES ተወዳጆችዎን፣ ዝርዝሮችዎን እና ቅንብሮችዎን በመሣሪያዎ ላይ ብቻ ያስቀምጣል። መለያ ከፈጠሩ፣ ኢሜይልዎ እና የሰቀሏቸው ዜማዎች በሰርቨሮቻችን ላይ በደህንነት ይቀመጣሉ እና ለማንም አይጋሩም።",
@@ -406,7 +411,7 @@ loading:"እየተጫነ...",serverDown:"ሰርቨሩ አይገኝም — የመ
 errAuth:"መግባት አልተቻለም። መረጃዎን ይመርምሩ እንደገና ይሞክሩ።",
 errUp:"መለያ መፍጠር አልተቻለም። ሌላ ኢሜይል ይሞክሩ።",
 errUpload:"ስቀሉ አልተሳካም። እንደገና ይሞክሩ።",errPerm:"ለዚህ ፈቃድ የለዎትም።",
-signedIn:"እንኳን ደህና መጡ!",signedOut:"ወጥተዋል።",myAccount:"የእኔ መለያ",admin:"አድሚን",
+signedIn:"እንኳን ደህና መጡ!",reportSong:"ዜማውን ሪፖርት አድርግ",sleepTimer:"የእንቅልፋ ቆጨሪ",sleepOff:"ቆጨሪውን አጫፋ",sleepEnd:"ከዚህ ዜማ በዋላ",sleepMin:"ደቂቃ",sleepSet:"ቆጨሪ ተቀምጧል",sleepStopped:"ማጥወት ተቅጁል",signedOut:"ወጥተዋል።",myAccount:"የእኔ መለያ",admin:"አድሚን",
 plays:"ማጫወቻ",errNet:"የግንኙነት ችግር። እንደገና ይሞክሩ።"}
 };
 let lang = localStorage.getItem("egs_lang") || "en";
@@ -552,10 +557,11 @@ const Store = {
 let favs = Store.get("egs_favs", []);
 let playlists = Store.get("egs_playlists", []);
 let dlCount = Store.get("egs_dl", 0);
-let isPremium = false;
+let serverDl = null; /* Set of song ids this account has downloaded (server-side count); null = unknown/offline */
+let isPremium = Store.get("egs_prem_until",0) > Date.now();
 function updatePremium(){
-  const u = S.profile && S.profile.premium_until ? new Date(S.profile.premium_until).getTime() : 0;
-  isPremium = u > Date.now();
+  if(S.profile){ const u = S.profile.premium_until ? new Date(S.profile.premium_until).getTime() : 0; Store.set("egs_prem_until",u); isPremium = u > Date.now(); }
+  else isPremium = Store.get("egs_prem_until",0) > Date.now(); /* profile could not load (offline): trust the last known value */
   return isPremium;
 }
 function premiumDaysLeft(){
@@ -578,18 +584,18 @@ const OffDB = {
     if(this._db) return Promise.resolve(this._db);
     return new Promise((res,rej)=>{
       try{
-        const r=indexedDB.open("egs-offline",1);
-        r.onupgradeneeded=()=>{ r.result.createObjectStore("songs",{keyPath:"id"}); };
+        const r=indexedDB.open("egs-offline",2);
+        r.onupgradeneeded=()=>{ const d=r.result; if(!d.objectStoreNames.contains("songs")) d.createObjectStore("songs",{keyPath:"id"}); if(!d.objectStoreNames.contains("local")) d.createObjectStore("local",{keyPath:"id"}); };
         r.onsuccess=()=>{ this._db=r.result; res(this._db); };
         r.onerror=()=>rej(r.error||new Error("idb"));
       }catch(e){ rej(e); }
     });
   },
-  async put(song,blob){
+  async put(song,blob,coverBlob){
     const db=await this.open();
     return new Promise((res,rej)=>{
       const tx=db.transaction("songs","readwrite");
-      tx.objectStore("songs").put({id:song.id,title:song.title,artist:song.artist||"",worshiper:song.worshiper||"",lyrics:song.lyrics||"",coverUrl:song.coverUrl||"",url:song.url||"",blob:blob,savedAt:Date.now()});
+      tx.objectStore("songs").put({id:song.id,title:song.title,artist:song.artist||"",worshiper:song.worshiper||"",lyrics:song.lyrics||"",coverUrl:song.coverUrl||"",url:song.url||"",coverBlob:coverBlob||null,blob:blob,savedAt:Date.now()});
       tx.oncomplete=()=>res(true); tx.onerror=()=>rej(tx.error);
     });
   },
@@ -629,23 +635,49 @@ const OffDB = {
     return null;
   }
 };
+/* Device audio files: kept in IndexedDB so they survive a reload */
+const LocalDB = {
+  async put(id,name,blob){
+    const db=await OffDB.open();
+    return new Promise((res,rej)=>{ const tx=db.transaction("local","readwrite"); tx.objectStore("local").put({id:id,name:name,blob:blob,savedAt:Date.now()}); tx.oncomplete=()=>res(true); tx.onerror=()=>rej(tx.error); });
+  },
+  async all(){
+    const db=await OffDB.open();
+    return new Promise((res,rej)=>{ const q=db.transaction("local","readonly").objectStore("local").getAll(); q.onsuccess=()=>res((q.result||[]).sort((a,b)=>(a.savedAt||0)-(b.savedAt||0))); q.onerror=()=>rej(q.error); });
+  },
+  async remove(id){
+    try{ const db=await OffDB.open(); await new Promise(res=>{ const tx=db.transaction("local","readwrite"); tx.objectStore("local").delete(id); tx.oncomplete=res; tx.onerror=res; }); }catch(e){}
+  }
+};
+function localToSong(r){
+  return {id:r.id,kind:"local",source:"local",title:r.name.replace(/\.\w+$/,""),artist:t("localAudio"),lyrics:"",objUrl:URL.createObjectURL(r.blob),hue:hueFor(r.name)};
+}
+async function loadLocalSongs(){
+  try{
+    const recs=await LocalDB.all();
+    S.localSongs=recs.map(localToSong);
+    renderLibrary();
+  }catch(e){}
+}
 const saveFavs=()=>Store.set("egs_favs",favs);
 const savePls=()=>Store.set("egs_playlists",playlists);
 
 /* ================= SONG REGISTRY ================= */
 const S = { sbSongs:[], myUploads:[], pending:[], profile:null, user:null, localSongs:[], offSongs:{} };
-function recToSong(r){ return {id:r.id,sbid:String(r.id).replace(/^sb-/,""),kind:"remote",source:"offline",title:r.title||"Untitled",artist:r.artist||"Unknown",worshiper:r.worshiper||"",coverUrl:r.coverUrl||"",lyrics:r.lyrics||"",url:r.url||"",hue:hueFor(r.title||"x")}; }
+const coverObj={};
+function recToSong(r){ let cu=r.coverUrl||""; if(r.coverBlob){ cu=coverObj[r.id]||(coverObj[r.id]=URL.createObjectURL(r.coverBlob)); } return {id:r.id,sbid:String(r.id).replace(/^sb-/,""),kind:"remote",source:"offline",title:r.title||"Untitled",artist:r.artist||"Unknown",worshiper:r.worshiper||"",coverUrl:cu,lyrics:r.lyrics||"",url:r.url||"",hue:hueFor(r.title||"x")}; }
 /* re-read saved downloads: rebuilds song info (works with no internet) and keeps the free-limit counter in step with what is really saved */
 async function syncOffline(){
   try{
     const all=await OffDB.all(); S.offSongs={};
     all.forEach(r=>{ S.offSongs[r.id]=recToSong(r); });
-    dlCount=all.length; Store.set("egs_dl",dlCount);
+    Object.keys(coverObj).forEach(k=>{ if(!S.offSongs[k]){ URL.revokeObjectURL(coverObj[k]); delete coverObj[k]; } });
+    dlCount=serverDl?serverDl.size:all.length; Store.set("egs_dl",dlCount);
     await refreshDisabled();
   }catch(e){}
-  renderLibrary();
+  renderLibrary(); renderHome(); renderSearchList($("#searchInput").value);
 }
-function allSongs(){ return HYMNS.map(hymnSong).concat(S.sbSongs).concat(S.localSongs); }
+function allSongs(){ const off=(navigator.onLine&&S.sbSongs.length)?[]:Object.values(S.offSongs); return HYMNS.map(hymnSong).concat(S.sbSongs).concat(S.localSongs).concat(off); }
 function getSong(id){
   const h=HYMNS.find(x=>x.id===id); if(h) return hymnSong(h);
   return S.sbSongs.concat(S.localSongs).find(s=>s.id===id) || S.offSongs[id] || null;
@@ -691,7 +723,12 @@ const Player = {
     }
     syncPlayerUI();
   },
-  next(){ if(!this.q.length) return; this.i=(this.i+1)%this.q.length; this._start(); },
+  next(){
+    if(!this.q.length) return;
+    if(shuffleOn && this.q.length>1){ let n; do{ n=Math.floor(Math.random()*this.q.length); }while(n===this.i); this.i=n; }
+    else this.i=(this.i+1)%this.q.length;
+    this._start();
+  },
   prev(){
     if(!this.q.length) return;
     const pos=this.pos();
@@ -711,7 +748,10 @@ const Player = {
     return (isFinite(audioEl.duration)&&audioEl.duration>0)?audioEl.duration:0; }
 };
 let repeatOne=false;
+let shuffleOn=!!Store.get("egs_shuffle",false);
+let sleepTimerId=null, sleepEndAt=0, sleepAfterSong=false;
 audioEl.addEventListener("ended", ()=>{
+  if(sleepAfterSong){ sleepAfterSong=false; Player.playing=false; syncPlayerUI(); updateSleepUI(); toast(t("sleepStopped")); return; }
   if(repeatOne){ try{ audioEl.currentTime=0; audioEl.play().catch(()=>{}); }catch(e){} }
   else Player.next();
 });
@@ -720,6 +760,7 @@ function syncPlayerUI(){
   document.body.classList.toggle("is-playing", !!(s&&Player.playing));
   if(!s){ mp.hidden=true; return; }
   mp.hidden=false;
+  updateMediaSession();
   $("#mpCover").style.cssText=s.coverUrl?("background-image:url('"+s.coverUrl.replace(/'/g,"%27")+"');background-size:cover;background-position:center"):coverStyle(s.hue||hueFor(s.title));
   $("#mpCover").textContent=s.coverUrl?"":s.title.charAt(0).toUpperCase();
   $("#mpTitle").textContent=s.title; $("#mpArtist").textContent=s.artist;
@@ -735,6 +776,34 @@ function syncPlayerUI(){
     $("#fpFav").classList.toggle("fav", favs.includes(s.id));
   }
 }
+/* ================= MEDIA SESSION (lock screen / headphone controls) ================= */
+function updateMediaSession(){
+  if(!("mediaSession" in navigator)) return;
+  const s=Player.song();
+  if(!s){ navigator.mediaSession.metadata=null; return; }
+  try{
+    const art=s.coverUrl?[{src:s.coverUrl,sizes:"512x512"}]:[{src:"icon-192.png",sizes:"192x192",type:"image/png"}];
+    navigator.mediaSession.metadata=new MediaMetadata({title:s.title,artist:s.worshiper||s.artist||"",album:"ES — Ethiopian Songs",artwork:art});
+    navigator.mediaSession.playbackState=Player.playing?"playing":"paused";
+  }catch(e){}
+}
+(function initMediaSession(){
+  if(!("mediaSession" in navigator)) return;
+  const set=(a,fn)=>{ try{ navigator.mediaSession.setActionHandler(a,fn); }catch(e){} };
+  set("play",()=>{ if(!Player.playing) Player.toggle(); });
+  set("pause",()=>{ if(Player.playing) Player.toggle(); });
+  set("previoustrack",()=>Player.prev());
+  set("nexttrack",()=>Player.next());
+  set("seekto",d=>{ const dur=Player.dur(); if(dur>0&&d.seekTime!=null) Player.seek(d.seekTime/dur); });
+  set("seekforward",d=>{ const dur=Player.dur(); if(dur>0) Player.seek(Math.min(1,(Player.pos()+(d.seekOffset||10))/dur)); });
+  set("seekbackward",d=>{ const dur=Player.dur(); if(dur>0) Player.seek(Math.max(0,(Player.pos()-(d.seekOffset||10))/dur)); });
+  setInterval(()=>{
+    const dur=Player.dur();
+    if(dur>0&&Player.song()&&Player.song().kind!=="synth"){
+      try{ navigator.mediaSession.setPositionState({duration:dur,playbackRate:1,position:Math.min(dur,Player.pos())}); }catch(e){}
+    }
+  },1000);
+})();
 let showRemaining=true;
 $("#fpDur").addEventListener("click",()=>{ showRemaining=!showRemaining; });
 setInterval(()=>{
@@ -890,6 +959,7 @@ async function renderDownloads(){
 }
 async function removeDownload(id){
   await OffDB.remove(id);
+  if(supa&&S.user&&navigator.onLine){ try{ await supa.from("downloads").delete().eq("song_id",id); if(serverDl) serverDl.delete(id); }catch(e){} }
   try{ if(dlCount>0){ dlCount--; Store.set("egs_dl",dlCount); } }catch(e){}
   try{ await refreshDisabled(); }catch(e){}
   await syncOffline();
@@ -910,7 +980,16 @@ function openSheet(s){
   const dl=document.createElement("button"); dl.className="shbtn";
   dl.innerHTML='<span style="font-size:18px">⬇</span><span>'+t("download")+'</span>';
   dl.addEventListener("click",()=>{ closeSheet(); downloadSong(s); });
+  const rp=document.createElement("button"); rp.className="shbtn";
+  rp.innerHTML='<span style="font-size:18px">⚑</span><span>'+t("reportSong")+'</span>';
+  rp.addEventListener("click",()=>{
+    closeSheet();
+    const sub=encodeURIComponent("Report: "+s.title);
+    const bod=encodeURIComponent("Song: "+s.title+"\nArtist: "+(s.artist||"")+"\nID: "+s.id+"\n\nReason (copyright / wrong content / other):\n");
+    location.href="mailto:egcethiopiangospelsongs@gmail.com?subject="+sub+"&body="+bod;
+  });
   body.append(fav,dl);
+  if(s.kind==="remote") body.appendChild(rp);
   const h=document.createElement("div"); h.className="sub"; h.style.marginTop="8px"; h.textContent=t("addToPl");
   body.appendChild(h);
   playlists.forEach(p=>{
@@ -953,6 +1032,40 @@ $("#fpSeek").addEventListener("input",e=>Player.seek(e.target.value/1000));
 $("#fpRepeat").addEventListener("click",()=>{
   repeatOne=!repeatOne;
   $("#fpRepeat").style.opacity=repeatOne?"1":"0.45";
+  $("#fpRepeat").classList.toggle("on",repeatOne);
+});
+function syncShuffleUI(){ const b=$("#fpShuf"); b.style.opacity=shuffleOn?"1":"0.45"; b.classList.toggle("on",shuffleOn); }
+$("#fpShuf").addEventListener("click",()=>{ shuffleOn=!shuffleOn; Store.set("egs_shuffle",shuffleOn); syncShuffleUI(); });
+syncShuffleUI();
+
+/* ---- sleep timer ---- */
+function clearSleep(){ if(sleepTimerId){ clearTimeout(sleepTimerId); sleepTimerId=null; } sleepEndAt=0; sleepAfterSong=false; updateSleepUI(); }
+function updateSleepUI(){ $("#fpSleep").classList.toggle("on", !!(sleepTimerId||sleepAfterSong)); }
+function setSleep(mins){
+  clearSleep();
+  if(mins==="end"){ sleepAfterSong=true; }
+  else if(mins>0){
+    sleepEndAt=Date.now()+mins*60000;
+    sleepTimerId=setTimeout(()=>{
+      sleepTimerId=null; sleepEndAt=0;
+      if(Player.playing) Player.toggle();
+      updateSleepUI(); toast(t("sleepStopped"));
+    }, mins*60000);
+  }
+  updateSleepUI();
+}
+$("#fpSleep").addEventListener("click",()=>{
+  const body=$("#sheetBody"); body.innerHTML="";
+  const h=document.createElement("h3"); h.textContent=t("sleepTimer"); body.appendChild(h);
+  const sub=document.createElement("div"); sub.className="sub";
+  sub.textContent=sleepEndAt?Math.max(1,Math.ceil((sleepEndAt-Date.now())/60000))+" "+t("sleepMin"):(sleepAfterSong?t("sleepEnd"):"");
+  body.appendChild(sub);
+  const mk=(label,val)=>{ const b=document.createElement("button"); b.className="shbtn"; b.innerHTML="<span style=\"font-size:18px\">\u{1F319}</span><span>"+esc(label)+"</span>";
+    b.addEventListener("click",()=>{ setSleep(val); closeSheet(); toast(t("sleepSet")); }); body.appendChild(b); };
+  [15,30,45,60].forEach(m=>mk(m+" "+t("sleepMin"),m));
+  const cs=Player.song(); if(cs && cs.kind!=="synth") mk(t("sleepEnd"),"end");
+  if(sleepTimerId||sleepAfterSong){ const off=document.createElement("button"); off.className="shbtn"; off.innerHTML="<span style=\"font-size:18px\">\u2715</span><span>"+esc(t("sleepOff"))+"</span>"; off.addEventListener("click",()=>{ clearSleep(); closeSheet(); }); body.appendChild(off); }
+  $("#sheetWrap").hidden=false;
 });
 $("#fpFav").addEventListener("click",()=>{ const s=Player.song(); if(s){ toggleFav(s.id); const b=$("#fpFav"); b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); syncPlayerUI(); } });
 $("#fpDl").addEventListener("click",()=>{ const s=Player.song(); if(s) downloadSong(s); });
@@ -963,8 +1076,20 @@ function safeName(s){ return (s||"song").replace(/[^\w\-. ]+/g,"").trim().slice(
 async function downloadSong(s){
   if(!S.user){ toast(t("dlSignIn")); switchTab("account"); return; }
   if(s.kind==="local"){ toast(t("dlDone")); return; }
-  if(!isPremium && dlCount>=10){ toast(t("dlLimit")); switchTab("account"); return; }
+  if(!isPremium && dlCount>=10 && !(serverDl&&serverDl.has(s.id))){ toast(t("dlLimit")); switchTab("account"); return; }
   toast("⏳");
+  let reserved=false;
+  if(supa && S.user && !(serverDl&&serverDl.has(s.id))){
+    try{
+      const {error}=await supa.from("downloads").upsert({user_id:S.user.id,song_id:s.id},{onConflict:"user_id,song_id",ignoreDuplicates:true});
+      if(error){
+        if(/download_limit/i.test(error.message||"")){ toast(t("dlLimit")); switchTab("account"); await loadServerDownloads(); return; }
+        throw error;
+      }
+      reserved=true; if(serverDl) serverDl.add(s.id);
+    }catch(e){ toast(t("errNet")); return; }
+  }
+  const undo=async()=>{ if(reserved){ try{ await supa.from("downloads").delete().eq("song_id",s.id); }catch(e){} if(serverDl) serverDl.delete(s.id); } };
   try{
     let blob, name;
     if(s.kind==="synth"){
@@ -974,16 +1099,17 @@ async function downloadSong(s){
       if(!r.ok) throw new Error("fetch");
       blob=await r.blob(); name=safeName(s.title)+(s.url.match(/\.\w{2,4}(\?|$)/)?.[0]||".mp3");
     }
-    try{ await OffDB.put(s, blob); s._offUrl=null; }catch(e){}
-    const a=document.createElement("a");
-    a.href=URL.createObjectURL(blob); a.download=name;
-    document.body.appendChild(a); a.click();
-    setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },4000);
+    let cblob=null;
+    if(s.coverUrl){ try{ const cr=await fetch(s.coverUrl); if(cr.ok) cblob=await cr.blob(); }catch(e){} }
+    try{ await OffDB.put(s, blob, cblob); s._offUrl=null; }
+    catch(e){ await undo(); toast(lang==="am"?"ማስቀመጥ አልተቻለም (ማከማቻ ሞልቷል?)":"Couldn't save on this device (storage full?)"); return; }
+    try{ if(navigator.storage&&navigator.storage.persist) navigator.storage.persist(); }catch(e){}
+    /* saved inside the app only (no file is handed to the phone) */
     dlCount++; Store.set("egs_dl",dlCount);
     try{ await refreshDisabled(); }catch(e){}
     try{ await syncOffline(); }catch(e){}
     toast(t("dlDone"));
-  }catch(e){ toast(t("errNet")); }
+  }catch(e){ await undo(); toast(t("errNet")); }
 }
 
 /* ================= COPY HELPER ================= */
@@ -1033,15 +1159,23 @@ async function fetchProfile(){
     if(!error&&data) S.profile=data;
   }catch(e){}
 }
+async function loadServerDownloads(){
+  serverDl=null;
+  if(!supa||!S.user||!navigator.onLine) return;
+  try{
+    const {data,error}=await supa.from("downloads").select("song_id");
+    if(!error&&data){ serverDl=new Set(data.map(r=>r.song_id)); dlCount=serverDl.size; Store.set("egs_dl",dlCount); }
+  }catch(e){}
+}
 async function refreshAfterAuth(){
   S.oauthError=null;
-  await fetchProfile(); updatePremium(); await refreshDisabled();
+  await fetchProfile(); updatePremium(); await loadServerDownloads(); await refreshDisabled();
   await loadMyUploads(); await loadPending(); renderAccount();
 }
 
 /* ================= ACCOUNT TAB ================= */
 let authMode="up";
-function renderAccount(){ renderAuth(); renderUploadBox(); renderMyUploadsBox(); renderAdminBox(); renderPremBox(); renderSupportBox(); renderExtrasBox(); }
+function renderAccount(){ renderAuth(); renderUploadBox(); renderMyUploadsBox(); renderAdminBox(); renderPremBox(); renderExtrasBox(); }
 
 function renderAuth(){
   const box=$("#authBox"); box.innerHTML="";
@@ -1052,7 +1186,7 @@ function renderAuth(){
       +'<div class="kv"><span>'+t("email")+'</span><b>'+esc(S.user.email||"")+'</b></div>'
       +'<div class="kv"><span>'+t("signUp")+'</span><b>'+esc((S.profile&&S.profile.display_name)||"—")+'</b></div>';
     const out=document.createElement("button"); out.className="btn ghost"; out.textContent=t("signOut");
-    out.addEventListener("click",async()=>{ await supa.auth.signOut(); S.user=null;S.profile=null;S.myUploads=[];S.pending=[]; isPremium=false; await refreshDisabled(); renderAccount(); toast(t("signedOut")); });
+    out.addEventListener("click",async()=>{ await supa.auth.signOut(); S.user=null;S.profile=null;S.myUploads=[];S.pending=[];serverDl=null; isPremium=false; Store.set("egs_prem_until",0); await refreshDisabled(); renderAccount(); toast(t("signedOut")); });
     d.appendChild(out); box.appendChild(d); return;
   }
   const d=document.createElement("div"); d.className="card";
@@ -1374,11 +1508,11 @@ function renderPremBox(){
       +'<div class="hr"></div>'
       +'<p class="note"><b class="gold">'+t("telebirr")+'</b> — Dawit</p>'
       +'<div class="copyrow"><b>0902070153</b><button id="cpTbP">'+t("copy")+'</button></div>'
-      +'<div class="steps">'+esc(t("tbSteps"))+'</div>'
+      +'<div class="steps">'+escBot(t("tbSteps"))+'</div>'
       +'<div class="hr"></div>'
       +'<p class="note"><b class="gold">'+t("cbe")+'</b> — Dawit</p>'
       +'<div class="copyrow"><b>1000796194654</b><button id="cpCbeP">'+t("copy")+'</button></div>'
-      +'<p class="note">'+esc(t("cbeNote"))+'</p>'
+      +'<p class="note">'+escBot(t("cbeNote"))+'</p>'
       +'<div class="hr"></div>'
       +'<p class="note">'+t("premNote")+'</p>'
       +'<p class="note">'+t("download")+': '+dlCount+' / 10</p>'
@@ -1388,23 +1522,6 @@ function renderPremBox(){
   box.appendChild(d);
   const c1=d.querySelector("#cpTbP"); if(c1) c1.addEventListener("click",()=>copyText("0902070153"));
   const c2=d.querySelector("#cpCbeP"); if(c2) c2.addEventListener("click",()=>copyText("1000796194654"));
-}
-
-function renderSupportBox(){
-  const box=$("#supportBox"); box.innerHTML="";
-  const d=document.createElement("div"); d.className="card";
-  const tb="0902070153", cbe="1000796194654";
-  d.innerHTML='<h3>💛 '+t("support")+'</h3>'
-    +'<p class="note"><b class="gold">'+t("telebirr")+'</b> — Dawit</p>'
-    +'<div class="copyrow"><b>'+tb+'</b><button id="cpTb">'+t("copy")+'</button></div>'
-    +'<div class="steps">'+esc(t("tbSteps"))+'</div>'
-    +'<div class="hr"></div>'
-    +'<p class="note"><b class="gold">'+t("cbe")+'</b> — Dawit</p>'
-    +'<div class="copyrow"><b>'+cbe+'</b><button id="cpCbe">'+t("copy")+'</button></div>'
-    +'<p class="note">'+esc(t("cbeNote"))+'</p>';
-  box.appendChild(d);
-  d.querySelector("#cpTb").addEventListener("click",()=>copyText(tb));
-  d.querySelector("#cpCbe").addEventListener("click",()=>copyText(cbe));
 }
 
 function renderExtrasBox(){
@@ -1436,10 +1553,11 @@ function renderExtrasBox(){
   d.appendChild(loc);
   loc.querySelector("#locBtn").addEventListener("click",()=>loc.querySelector("#locFile").click());
   loc.querySelector("#locFile").addEventListener("change",e=>{
-    Array.from(e.target.files).forEach((f,i)=>{
-      S.localSongs.push({id:"local-"+Date.now()+"-"+i,kind:"local",source:"local",
-        title:f.name.replace(/\.\w+$/,""),artist:t("localAudio"),lyrics:"",
-        objUrl:URL.createObjectURL(f),hue:hueFor(f.name)});
+    const files=Array.from(e.target.files);
+    files.forEach((f,i)=>{
+      const rec={id:"local-"+Date.now()+"-"+i,name:f.name,blob:f};
+      S.localSongs.push(localToSong(rec));
+      LocalDB.put(rec.id,rec.name,f).catch(()=>{});
     });
     e.target.value=""; renderLibrary(); switchTab("library"); toast(t("dlDone"));
   });
@@ -1461,31 +1579,36 @@ async function initAuth(){
   try{
     const {data}=await supa.auth.getSession();
     if(data&&data.session){ S.user=data.session.user; await refreshAfterAuth(); }
-    else { isPremium=false; }
+    else if(navigator.onLine){ isPremium=false; Store.set("egs_prem_until",0); }
   }catch(e){}
   supa.auth.onAuthStateChange(async(_ev,session)=>{
     const nu=session?session.user:null;
     const changed=(nu?nu.id:null)!==(S.user?S.user.id:null);
     S.user=nu;
     if(!changed) return;
-    if(S.user){ await refreshAfterAuth(); } else { S.profile=null; S.myUploads=[]; S.pending=[]; isPremium=false; renderAccount(); }
+    if(S.user){ await refreshAfterAuth(); } else { S.profile=null; S.myUploads=[]; S.pending=[]; serverDl=null; isPremium=false; Store.set("egs_prem_until",0); renderAccount(); }
   });
 }
 
-/* ================= PWA INSTALL BANNER ================= */
+/* ================= PWA INSTALL BUTTON ================= */
 let deferredPrompt=null;
-function maybeShowInstall(){
-  try{
-    if(localStorage.getItem("egs_install_x")) return;
-    if(window.matchMedia("(display-mode: standalone)").matches) return;
-    $("#installBanner").style.display="block";
-  }catch(e){}
+const isStandalone=()=>window.matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+function installRow(){
+  const row=$("#installRow"); if(!row) return;
+  let hide=isStandalone();
+  try{ const x=+localStorage.getItem("egs_install_x")||0; if(x && Date.now()-x<30*864e5) hide=true; }catch(e){}
+  row.style.display=hide?"none":"block";
 }
-window.addEventListener("beforeinstallprompt",(e)=>{ e.preventDefault(); deferredPrompt=e; maybeShowInstall(); });
+window.addEventListener("beforeinstallprompt",(e)=>{ e.preventDefault(); deferredPrompt=e; installRow(); });
+window.addEventListener("appinstalled",()=>{ deferredPrompt=null; try{ localStorage.setItem("egs_install_x",String(Date.now()+365*864e5)); }catch(e){} installRow(); });
 document.addEventListener("DOMContentLoaded",()=>{
-  const x=$("#installX"); if(x) x.addEventListener("click",()=>{ try{localStorage.setItem("egs_install_x","1");}catch(e){} $("#installBanner").style.display="none"; });
-  const b=$("#installBtn"); if(b) b.addEventListener("click",async()=>{ if(deferredPrompt){ deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null; $("#installBanner").style.display="none"; } });
-  setTimeout(()=>{ if(deferredPrompt) maybeShowInstall(); },3000);
+  installRow();
+  $("#installX").addEventListener("click",()=>{ try{ localStorage.setItem("egs_install_x",String(Date.now())); }catch(e){} installRow(); });
+  $("#installBtn").addEventListener("click",async()=>{
+    if(deferredPrompt){ deferredPrompt.prompt(); try{ await deferredPrompt.userChoice; }catch(e){} deferredPrompt=null; installRow(); return; }
+    const ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+    const h=$("#installHint"); h.textContent=t(ios?"iosHint":"menuHint"); h.style.display=h.style.display==="block"?"none":"block";
+  });
 });
 
 /* ================= INIT ================= */
@@ -1494,8 +1617,18 @@ renderHome();
 renderSearchList("");
 renderLibrary();
 renderAccount();
+loadLocalSongs();
 if(supa){ initAuth(); loadApproved(); }
 syncOffline();
+function netUI(){
+  let b=$("#offBanner"); if(!b){ b=document.createElement("div"); b.id="offBanner"; document.body.appendChild(b); }
+  b.style.display=navigator.onLine?"none":"block";
+  b.textContent=lang==="am"?"ከመስመር ውጭ ነዎት — የወረዱ ዜማዎች ይጫወታሉ":"You're offline — downloaded songs still play";
+}
+window.addEventListener("offline",()=>{ netUI(); renderHome(); renderSearchList($("#searchInput").value); });
+window.addEventListener("online",()=>{ netUI(); try{ loadApproved(); if(supa&&S.user) refreshAfterAuth(); }catch(e){} });
+netUI();
+if("serviceWorker" in navigator && /^https?:/.test(location.protocol)){ window.addEventListener("load",()=>{ navigator.serviceWorker.register("sw.js").catch(()=>{}); }); }
 </script>
 </body>
 </html>
