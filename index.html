@@ -285,9 +285,14 @@ body.is-playing #fpCover{animation:none}
       <div id="authBox"></div>
       <div id="uploadBox"></div>
       <div id="myUploads"></div>
+      <div id="notifBox"></div>
       <div id="adminBox"></div>
       <div id="premBox"></div>
       <div id="extrasBox"></div>
+    </section>
+    <section id="v-artist" class="view">
+      <div id="artistHead"></div>
+      <div id="artistList"></div>
     </section>
   </main>
 
@@ -387,7 +392,7 @@ loading:"Loading...",serverDown:"Server unavailable — showing built-in hymns o
 errAuth:"Couldn't sign you in. Check your details and try again.",
 errUp:"Couldn't create the account. Try a different email.",
 errUpload:"Upload failed. Please try again.",errPerm:"You don't have permission for that.",
-signedIn:"Welcome!",reportSong:"Report this song",sleepTimer:"Sleep timer",sleepOff:"Turn off timer",sleepEnd:"After this song",sleepMin:"minutes",sleepSet:"Timer set",sleepStopped:"Playback stopped",signedOut:"Signed out.",myAccount:"My account",admin:"Admin",
+signedIn:"Welcome!",reportSong:"Report this song",sleepTimer:"Sleep timer",sleepOff:"Turn off timer",sleepEnd:"After this song",sleepMin:"minutes",sleepSet:"Timer set",sleepStopped:"Playback stopped",signedOut:"Signed out.",myAccount:"My account",admin:"Admin",artist:"Artist",songs:"songs",playAll:"Play all",back:"Back",updates:"Updates",noUpdates:"No updates yet.",notifApproved:"was approved and is now live ✓",notifRejected:"was not approved",markAllRead:"Mark all read",makeArtist:"Make artist",artistNote:"Uploads are invite-only. Enter the artist's account email to let them upload songs.",artistGranted:"Artist access granted",
 plays:"plays",errNet:"Connection problem. Try again.",tapToPlay:"Tap \u25b6 to keep the music playing"},
 am:{tagline:"የኢትዮጵያ ዜማዎች",installTitle:"መተግበሪያውን አውርድ",installSub:"ESን ወደ መነሻ ማያ ገጽዎ ጨምር",install:"ጫን",iosHint:"የShare ቁልፉን ይንኩ፣ ከዚያ «ወደ መነሻ ማያ ገጽ ጨምር» ይምረጡ።",menuHint:"የአሳሽዎን ምናሌ ይክፈቱ፣ ከዚያ «መተግበሪያ ጫን» ወይም «ወደ መነሻ ማያ ገጽ ጨምር» ይምረጡ።",home:"መነሻ",search:"ፍለጋ",library:"ላይብረሪ",account:"መለያ",nowPlaying:"አሁን እየተጫወተ",
 greetM:"እንደምን አደሩ",greetA:"እንደምን ዋሉ",greetE:"እንደምን አመሹ",
@@ -419,7 +424,7 @@ loading:"እየተጫነ...",serverDown:"ሰርቨሩ አይገኝም — የመ
 errAuth:"መግባት አልተቻለም። መረጃዎን ይመርምሩ እንደገና ይሞክሩ።",
 errUp:"መለያ መፍጠር አልተቻለም። ሌላ ኢሜይል ይሞክሩ።",
 errUpload:"ስቀሉ አልተሳካም። እንደገና ይሞክሩ።",errPerm:"ለዚህ ፈቃድ የለዎትም።",
-signedIn:"እንኳን ደህና መጡ!",reportSong:"ዜማውን ሪፖርት አድርግ",sleepTimer:"የእንቅልፋ ቆጨሪ",sleepOff:"ቆጨሪውን አጫፋ",sleepEnd:"ከዚህ ዜማ በዋላ",sleepMin:"ደቂቃ",sleepSet:"ቆጨሪ ተቀምጧል",sleepStopped:"ማጥወት ተቅጁል",signedOut:"ወጥተዋል።",myAccount:"የእኔ መለያ",admin:"አድሚን",
+signedIn:"እንኳን ደህና መጡ!",reportSong:"ዜማውን ሪፖርት አድርግ",sleepTimer:"የእንቅልፋ ቆጨሪ",sleepOff:"ቆጨሪውን አጫፋ",sleepEnd:"ከዚህ ዜማ በዋላ",sleepMin:"ደቂቃ",sleepSet:"ቆጨሪ ተቀምጧል",sleepStopped:"ማጥወት ተቅጁል",signedOut:"ወጥተዋል።",myAccount:"የእኔ መለያ",admin:"አድሚን",artist:"አርቲስት",songs:"ዜማዎች",playAll:"ሁሉንም አጫውት",back:"ተመለስ",updates:"ማሳወቂያዎች",noUpdates:"ገና ምንም ማሳወቂያ የለም።",notifApproved:"ተቀብሎ አሁን ታትሟል ✓",notifRejected:"አልተቀበለም",markAllRead:"ሁሉንም እንደተነበበ ምልክት አድርግ",makeArtist:"አርቲስት አድርግ",artistNote:"ስቀላቶች በእርዳታ ብቻ ናቸው። አርቲስቱ እንዲሰቅል የኢሜይል አድራሻውን ከዚህ በታች ያስገቡ።",artistGranted:"የአርቲስት ፈቃድ ተሰጥቷል",
 plays:"ማጫወቻ",errNet:"የግንኙነት ችግር። እንደገና ይሞክሩ።",tapToPlay:"ሙዚቃው እንዲቀጥል \u25b6 ይንኩ"}
 };
 let lang = localStorage.getItem("egs_lang") || "en";
@@ -671,7 +676,7 @@ const saveFavs=()=>Store.set("egs_favs",favs);
 const savePls=()=>Store.set("egs_playlists",playlists);
 
 /* ================= SONG REGISTRY ================= */
-const S = { sbSongs:[], myUploads:[], pending:[], profile:null, user:null, localSongs:[], offSongs:{} };
+const S = { sbSongs:[], myUploads:[], pending:[], profile:null, user:null, localSongs:[], offSongs:{}, notifs:[] };
 const coverObj={};
 function recToSong(r){ let cu=r.coverUrl||""; if(r.coverBlob){ cu=coverObj[r.id]||(coverObj[r.id]=URL.createObjectURL(r.coverBlob)); } return {id:r.id,sbid:String(r.id).replace(/^sb-/,""),kind:"remote",source:"offline",title:r.title||"Untitled",artist:r.artist||"Unknown",worshiper:r.worshiper||"",coverUrl:cu,lyrics:r.lyrics||"",url:r.url||"",hue:hueFor(r.title||"x")}; }
 /* re-read saved downloads: rebuilds song info (works with no internet) and keeps the free-limit counter in step with what is really saved */
@@ -924,6 +929,22 @@ setInterval(()=>{
   $("#fpDur").textContent=(showRemaining&&d>0)?fmtT(Math.max(0,d-p)):fmtT(d);
 }, 500);
 
+/* ================= UI: ARTIST PAGE ================= */
+function openArtist(name){
+  const list=S.sbSongs.filter(s=>(s.artist||"")===name);
+  const ah=$("artistHead");
+  ah.innerHTML='<button class="btn ghost small" id="artistBack">\u2039 '+t("back")+'</button>'
+    +'<h2 style="margin:12px 0 2px">'+esc(name)+'</h2>'
+    +'<p class="muted" style="margin-bottom:10px">'+list.length+' '+t("songs")+'</p>'
+    +(list.length?'<button class="btn small" id="artistPlayAll">\u25B6 '+t("playAll")+'</button>':"");
+  const al=$("artistList"); al.innerHTML="";
+  if(!list.length) al.innerHTML='<p class="muted">'+t("noSongs")+'</p>';
+  list.forEach((s,i)=>al.appendChild(songRow(s,list,i)));
+  $("artistBack").addEventListener("click",()=>switchTab("home"));
+  const pa=$("artistPlayAll"); if(pa) pa.addEventListener("click",()=>Player.playQueue(list,0));
+  switchTab("artist");
+}
+
 /* ================= UI: TABS ================= */
 function switchTab(name){
   $$("#tabbar button").forEach(b=>b.classList.toggle("on", b.dataset.tab===name));
@@ -940,12 +961,13 @@ function songRow(s, queue, idx){
   const locked=disabledIds.has(s.id);
   if(locked) b.style.opacity=".45";
   b.innerHTML='<div class="cover" style="'+(s.coverUrl?'background-image:url(\''+esc(s.coverUrl)+'\');background-size:cover;background-position:center':coverStyle(s.hue||hueFor(s.title)))+'">'+(s.coverUrl?'':esc(s.title.charAt(0).toUpperCase()))+'</div>'
-    +'<div class="mi"><b>'+esc(s.title)+(locked?' 🔒':'')+'</b><span>'+(s.worshiper?'🙏 '+esc(s.worshiper):esc(s.artist))+'</span></div>'
+    +'<div class="mi"><b>'+esc(s.title)+(locked?' 🔒':'')+'</b><span data-act="artist" style="text-decoration:underline dotted;text-underline-offset:3px">'+(s.worshiper?'🙏 '+esc(s.worshiper):esc(s.artist))+'</span></div>'
     +'<span class="icobtn '+(favs.includes(s.id)?"fav":"")+'" data-act="fav">'+heart(favs.includes(s.id))+'</span>'
     +'<span class="icobtn" data-act="dl">'+IC.dl+'</span>'
     +'<span class="icobtn" data-act="more">'+IC.more+'</span>';
   b.addEventListener("click",e=>{
     const act=e.target.closest("[data-act]")?.dataset.act;
+    if(act==="artist"){ e.stopPropagation(); openArtist(s.artist||"Unknown"); return; }
     if(act==="fav"){ toggleFav(s.id); const ic=e.target.closest("[data-act]"); ic.innerHTML=heart(favs.includes(s.id)); ic.classList.toggle("fav",favs.includes(s.id)); ic.classList.remove("pop"); void ic.offsetWidth; ic.classList.add("pop"); e.stopPropagation(); return; }
     if(act==="dl"){ downloadSong(s); e.stopPropagation(); return; }
     if(act==="more"){ openSheet(s); e.stopPropagation(); return; }
@@ -1279,12 +1301,43 @@ async function loadServerDownloads(){
 async function refreshAfterAuth(){
   S.oauthError=null;
   await fetchProfile(); updatePremium(); await loadServerDownloads(); await refreshDisabled();
-  await loadMyUploads(); await loadPending(); renderAccount();
+  await loadMyUploads(); await loadPending(); await loadNotifs(); renderAccount();
+}
+async function loadNotifs(){
+  S.notifs=[];
+  if(!supa||!S.user) return;
+  try{
+    const {data}=await supa.from("notifications").select("*").eq("user_id",S.user.id).order("created_at",{ascending:false}).limit(25);
+    S.notifs=data||[];
+  }catch(e){}
+}
+function renderNotifsBox(){
+  const box=$("#notifBox"); box.innerHTML="";
+  if(!supa||!S.user) return;
+  const unread=S.notifs.filter(n=>!n.read).length;
+  const d=document.createElement("div"); d.className="card";
+  d.innerHTML='<h3>\uD83D\uDD14 '+t("updates")+(unread?' <span class="pill p">'+unread+'</span>':"")+'</h3>'
+    +(S.notifs.length?'<button class="btn small ghost" id="notifRead">'+t("markAllRead")+'</button>':"")
+    +'<div id="notifList"></div>';
+  const list=d.querySelector("#notifList");
+  if(!S.notifs.length) list.innerHTML='<p class="muted">'+t("noUpdates")+'</p>';
+  S.notifs.forEach(n=>{
+    const it=document.createElement("div"); it.className="kv";
+    const dt=n.created_at?new Date(n.created_at).toLocaleDateString():"";
+    it.innerHTML='<span style="'+(n.read?"":"font-weight:700")+'">'+(n.kind==="approved"?"\u2705":"\u274C")+' &quot;'+esc(n.message||"")+'&quot; '+t(n.kind==="approved"?"notifApproved":"notifRejected")+'</span><small class="muted">'+dt+'</small>';
+    list.appendChild(it);
+  });
+  box.appendChild(d);
+  const mr=d.querySelector("#notifRead");
+  if(mr) mr.addEventListener("click",async()=>{
+    try{ await supa.from("notifications").update({read:true}).eq("user_id",S.user.id).eq("read",false); }catch(e){}
+    await loadNotifs(); renderNotifsBox();
+  });
 }
 
 /* ================= ACCOUNT TAB ================= */
 let authMode="up";
-function renderAccount(){ renderAuth(); renderUploadBox(); renderMyUploadsBox(); renderAdminBox(); renderPremBox(); renderExtrasBox(); }
+function renderAccount(){ renderAuth(); renderUploadBox(); renderMyUploadsBox(); renderNotifsBox(); renderAdminBox(); renderPremBox(); renderExtrasBox(); }
 
 function renderAuth(){
   const box=$("#authBox"); box.innerHTML="";
@@ -1295,7 +1348,7 @@ function renderAuth(){
       +'<div class="kv"><span>'+t("email")+'</span><b>'+esc(S.user.email||"")+'</b></div>'
       +'<div class="kv"><span>'+t("signUp")+'</span><b>'+esc((S.profile&&S.profile.display_name)||"—")+'</b></div>';
     const out=document.createElement("button"); out.className="btn ghost"; out.textContent=t("signOut");
-    out.addEventListener("click",async()=>{ await supa.auth.signOut(); S.user=null;S.profile=null;S.myUploads=[];S.pending=[];serverDl=null; isPremium=false; Store.set("egs_prem_until",0); await refreshDisabled(); renderAccount(); toast(t("signedOut")); });
+    out.addEventListener("click",async()=>{ await supa.auth.signOut(); S.user=null;S.profile=null;S.myUploads=[];S.pending=[];S.notifs=[];serverDl=null; isPremium=false; Store.set("egs_prem_until",0); await refreshDisabled(); renderAccount(); toast(t("signedOut")); });
     d.appendChild(out); box.appendChild(d); return;
   }
   const d=document.createElement("div"); d.className="card";
@@ -1382,7 +1435,7 @@ async function uploadFileProgress(bucket, path, file, onProgress){
 }
 function renderUploadBox(){
   const box=$("#uploadBox"); box.innerHTML="";
-  if(!supa||!S.user||!S.profile||!S.profile.is_admin) return;  const d=document.createElement("div"); d.className="card";
+  if(!supa||!S.user||!S.profile||!(S.profile.is_admin||S.profile.is_artist)) return;  const d=document.createElement("div"); d.className="card";
   d.innerHTML='<h3>🎵 '+t("uploadTitle")+'</h3>'
     +'<div class="fld"><label>'+t("fTitle")+'</label><input id="uTitle"></div>'
     +'<div class="fld"><label>'+t("fArtist")+'</label><input id="uArtist"></div>'
@@ -1563,6 +1616,21 @@ async function doGrantPremium(days){
     emEl.value=""; note.textContent=t("premGranted")+" ✓"; toast(t("premGranted"));
   }catch(e){ note.textContent=t("userNotFound"); }
 }
+async function doMakeArtist(){
+  const box=$("#adminBox");
+  const emEl=box.querySelector("#maEmail"), note=box.querySelector("#maNote");
+  const email=(emEl.value||"").trim().toLowerCase();
+  note.textContent="";
+  if(!email){ note.textContent=t("userNotFound"); return; }
+  note.textContent="\u23F3";
+  try{
+    const {data,error}=await supa.from("profiles").select("id").eq("email",email).single();
+    if(error||!data) throw new Error("notfound");
+    const {error:uerr}=await supa.from("profiles").update({is_artist:true}).eq("id",data.id);
+    if(uerr) throw uerr;
+    emEl.value=""; note.textContent=t("artistGranted")+" ✓"; toast(t("artistGranted"));
+  }catch(e){ note.textContent=t("userNotFound"); }
+}
 
 function renderAdminBox(){
   const box=$("#adminBox"); box.innerHTML="";
@@ -1594,6 +1662,14 @@ function renderAdminBox(){
   box.appendChild(p);
   p.querySelector("#gp30").addEventListener("click",()=>doGrantPremium(30));
   p.querySelector("#gp365").addEventListener("click",()=>doGrantPremium(365));
+  /* make artist (admin) \u2014 uploads are invite-only */
+  const ac=document.createElement("div"); ac.className="card";
+  ac.innerHTML='<h3>\uD83C\uDFA4 '+t("makeArtist")+'</h3>'
+    +'<p class="note">'+t("artistNote")+'</p>'
+    +'<div class="fld"><label>'+t("email")+'</label><input id="maEmail" type="email" placeholder="user@email.com" autocomplete="off"></div>'
+    +'<button class="btn small" id="maGo">'+t("makeArtist")+'</button><p class="note" id="maNote"></p>';
+  box.appendChild(ac);
+  ac.querySelector("#maGo").addEventListener("click",()=>doMakeArtist());
   /* manage songs (admin delete) */
   const mbox=document.createElement("div"); mbox.className="card";
   const mOpen=Store.get("egs_ms_open",false);
@@ -1615,9 +1691,13 @@ function renderAdminBox(){
   mh.addEventListener("click",()=>{ Store.set("egs_ms_open",!mOpen); renderAdminBox(); });
 }
 async function setStatus(id,status){
+  const row=S.pending.find(r=>String(r.id)===String(id));
   try{
     const {error}=await supa.from("songs").update({status:status}).eq("id",id);
     if(error) throw error;
+    if(row&&row.uploader_id&&(status==="approved"||status==="rejected")){
+      try{ await supa.from("notifications").insert({user_id:row.uploader_id,song_id:String(row.id),kind:status,message:row.title||"Untitled"}); }catch(e){}
+    }
     toast(status==="approved"?t("approvedMsg"):t("rejectedMsg"));
     await loadPending(); await loadApproved(); renderAdminBox();
   }catch(e){ toast(t("errPerm")); }
@@ -1727,7 +1807,7 @@ async function initAuth(){
     const changed=(nu?nu.id:null)!==(S.user?S.user.id:null);
     S.user=nu;
     if(!changed) return;
-    if(S.user){ await refreshAfterAuth(); } else { S.profile=null; S.myUploads=[]; S.pending=[]; serverDl=null; isPremium=false; Store.set("egs_prem_until",0); renderAccount(); }
+    if(S.user){ await refreshAfterAuth(); } else { S.profile=null; S.myUploads=[]; S.pending=[]; S.notifs=[]; serverDl=null; isPremium=false; Store.set("egs_prem_until",0); renderAccount(); }
   });
 }
 
