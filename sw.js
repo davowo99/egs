@@ -1,5 +1,5 @@
 /* ES service worker. Bump VERSION on every release so phones pick up the new files. */
-const VERSION = "es-v2.0";
+const VERSION = "es-v2.3";
 const CORE = ["./", "index.html", "manifest.json", "icon-192.png"];
 const SUPABASE_JS = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4";
 
