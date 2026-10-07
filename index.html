@@ -7,11 +7,11 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="EGS">
+<meta name="apple-mobile-web-app-title" content="ES">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" type="image/png" href="icon-192.png">
-<title>EGS — Ethiopian Gospel Music</title>
+<title>ES — Ethiopian Songs</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -235,14 +235,14 @@ body.is-playing #fpCover{animation:none}
 <div id="phone">
   <header id="topbar">
     <div class="logo"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#1ed760"/><g fill="#000"><rect x="9" y="17" width="4" height="10" rx="2"/><rect x="15" y="10" width="4" height="22" rx="2"/><rect x="21" y="14" width="4" height="14" rx="2"/><rect x="27" y="19" width="4" height="6" rx="2"/></g></svg></div>
-    <div class="tt"><b>EGS</b><span data-i18n="tagline">Ethiopian Gospel Music</span></div>
+    <div class="tt"><b>ES</b><span data-i18n="tagline">Ethiopian Songs</span></div>
   </header>
 
   <main id="views">
     <section id="v-home" class="view">
       <div id="installBanner" class="card" style="display:none;padding:10px 12px">
         <div class="kv" style="margin:0">
-          <span>📲 <b data-i18n="installTitle">Download the app</b><br><span class="muted" style="font-size:12px" data-i18n="installSub">Add EGS to your home screen</span></span>
+          <span>📲 <b data-i18n="installTitle">Download the app</b><br><span class="muted" style="font-size:12px" data-i18n="installSub">Add ES to your home screen</span></span>
           <span style="display:flex;gap:6px;align-items:center"><button class="btn small" id="installBtn" data-i18n="install" style="margin:0;width:auto;padding:8px 16px">Install</button><button class="icobtn" id="installX">✕</button></span>
         </div>
       </div>
@@ -344,7 +344,7 @@ function coverStyle(hue){ return "background:linear-gradient(135deg,hsl("+hue+",
 
 /* ================= I18N ================= */
 const STR = {
-en:{tagline:"Ethiopian Gospel Music",installTitle:"Download the app",installSub:"Add EGS to your home screen",install:"Install",home:"Home",search:"Search",library:"Library",account:"Account",nowPlaying:"NOW PLAYING",
+en:{tagline:"Ethiopian Songs",installTitle:"Download the app",installSub:"Add ES to your home screen",install:"Install",home:"Home",search:"Search",library:"Library",account:"Account",nowPlaying:"NOW PLAYING",
 greetM:"Good morning",greetA:"Good afternoon",greetE:"Good evening",
 playlists:"Playlists",hymnsTitle:"Songs",newUploads:"New uploads",community:"Community uploads",forYou:"For you",allSongs:"All songs",
 searchPh:"Search songs or artists...",noResults:"No results found.",
@@ -358,14 +358,14 @@ uploadTitle:"Upload a song",fTitle:"Song title",fArtist:"Original artist",fWorsh
 myUploads:"My uploads",stPending:"Pending",stApproved:"Approved",stRejected:"Rejected",
 reviewQ:"Review uploads",approve:"Approve",reject:"Reject",noPending:"No songs waiting for review.",approvedMsg:"Song approved",rejectedMsg:"Song rejected",manageSongs:"Manage songs",delete:"Delete",confirmDelete:"Delete this song permanently?",deletedMsg:"Song deleted ✓",noSongs:"No songs yet.",
 songSubmitted:"Song submitted! It will appear after approval.",
-support:"Support EGS",telebirr:"Telebirr",cbe:"CBE bank account",copy:"Copy",copied:"Copied!",
-tbSteps:"1. Open your telebirr app.\n2. Send to 0902070153 (Dawit).\n3. Open Telegram and send the payment screenshot to @egsmusic7.",
-cbeNote:"Send to this account, then open Telegram and send the screenshot to @egsmusic7.",
-premium:"EGS Premium",perMonth:"99 birr / month",perYear:"990 birr / year",
-premNote:"Free downloads: up to 10 songs. Premium unlocks unlimited downloads and no ads. Pay with telebirr or CBE above, then send the screenshot on Telegram to @egsmusic7 — premium is activated manually. Please wait up to 48 hours for payment approval.",
+support:"Support ES",telebirr:"Telebirr",cbe:"CBE bank account",copy:"Copy",copied:"Copied!",
+tbSteps:"1. Open your telebirr app.\n2. Send to 0902070153 (Dawit).\n3. Open Telegram and send the payment screenshot to @egs_music_bot.",
+cbeNote:"Send to this account, then open Telegram and send the screenshot to @egs_music_bot.",
+premium:"ES Premium",perMonth:"99 birr / month",perYear:"990 birr / year",
+premNote:"Free downloads: up to 10 songs. Premium unlocks unlimited downloads and no ads. Pay with telebirr or CBE above, then send the screenshot on Telegram to @egs_music_bot — premium is activated manually. Please wait up to 48 hours for payment approval.",
 premActive:"Premium is active",premStatus:"Premium active",daysLeft:"days left",premOffline:"Downloads are saved in the app and play even without internet.",premNeeded:"This song needs premium — renew to play it.",grantPrem:"Grant premium",premEmailPh:"User's email",prem30:"30 days",prem365:"1 year",premGranted:"Premium granted",userNotFound:"No account found with that email.",verifyTitle:"Check your email! 📧",verifySteps:"1. Open your email inbox\n2. Tap the confirmation link we sent you\n3. Come back here and log in",resend:"Resend email",resent:"Email sent again — check your inbox!",backToLogin:"Back to log in",
 privacy:"Privacy",help:"Help",report:"Report a problem",language:"Language",
-privacyTxt:"EGS keeps your favorites, playlists and settings only on your device. If you create an account, your email and uploaded songs are stored securely on our servers and never shared with anyone.",
+privacyTxt:"ES keeps your favorites, playlists and settings only on your device. If you create an account, your email and uploaded songs are stored securely on our servers and never shared with anyone.",
 helpTxt:"Browse hymns on Home, search for songs, tap the heart to save favorites, and build your own playlists. Downloads let you listen offline. Sign in to upload your own gospel songs — every upload is reviewed before it appears for everyone.",
 localAudio:"Play from my device",localNote:"Files play this session only.",chooseFiles:"Choose audio files",
 download:"Download",downloads:"Downloads",noDownloads:"No downloads yet — tap ⬇ on a song to save it.",dlRemoved:"Download removed",dlDone:"Saved for offline listening!",dlLimit:"Free download limit reached (10). Go premium for more.",dlSignIn:"Sign in to download songs.",
@@ -376,7 +376,7 @@ errUp:"Couldn't create the account. Try a different email.",
 errUpload:"Upload failed. Please try again.",errPerm:"You don't have permission for that.",
 signedIn:"Welcome!",signedOut:"Signed out.",myAccount:"My account",admin:"Admin",
 plays:"plays",errNet:"Connection problem. Try again."},
-am:{tagline:"የኢትዮጵያ ወንጌል ሙዚቃ",installTitle:"መተግበሪያውን አውርድ",installSub:"EGSን ወደ መነሻ ማያ ገጽዎ ጨምር",install:"ጫን",home:"መነሻ",search:"ፍለጋ",library:"ላይብረሪ",account:"መለያ",nowPlaying:"አሁን እየተጫወተ",
+am:{tagline:"የኢትዮጵያ ዜማዎች",installTitle:"መተግበሪያውን አውርድ",installSub:"ESን ወደ መነሻ ማያ ገጽዎ ጨምር",install:"ጫን",home:"መነሻ",search:"ፍለጋ",library:"ላይብረሪ",account:"መለያ",nowPlaying:"አሁን እየተጫወተ",
 greetM:"እንደምን አደሩ",greetA:"እንደምን ዋሉ",greetE:"እንደምን አመሹ",
 playlists:"የዘፈን ዝርዝሮች",hymnsTitle:"ዜማዎች",newUploads:"አዳዲስ ዜማዎች",community:"የማኅበረሰብ ስቅሎች",forYou:"ለእርስዎ",allSongs:"ሁሉም ዜማዎች",
 searchPh:"ዜማ ወይም ድምጻዊ ፈልግ...",noResults:"ምንም አልተገኘም።",
@@ -390,14 +390,14 @@ uploadTitle:"ዜማ ስቀል",fTitle:"የዜማ ርዕስ",fArtist:"ኦሪጅ�
 myUploads:"የእኔ ስቅሎች",stPending:"በጥበቃ ላይ",stApproved:"ተቀብሏል",stRejected:"ውድቅ ተደርጓል",
 reviewQ:"ስቅሎችን ይመርምሩ",approve:"አጽድቅ",reject:"ውድቅ አድርግ",noPending:"ለግምገማ የሚጠብቅ ዜማ የለም።",approvedMsg:"ዜማው ተቀብሏል",rejectedMsg:"ዜማው ውድቅ ተደርጓል",manageSongs:"ዜማዎች አስተዳደር",delete:"ሰርዝ",confirmDelete:"ይህን ዜማ ሙሉ በሙሉ ሰርዝ?",deletedMsg:"ዜማው ተሰርዟል ✓",noSongs:"ምንም ዜማ የለም።",
 songSubmitted:"ዜማው ተልኳል! ከተቀበለ በኋላ ይታያል።",
-support:"EGSን ይደግፉ",telebirr:"ቴሌብር",cbe:"የCBE የባንክ ሂሳብ",copy:"ቅዳ",copied:"ተቀድቷል!",
-tbSteps:"1. የቴሌብር መተግበሪያዎን ይክፈቱ።\n2. ወደ 0902070153 (ዳዊት) ይላኩ።\n3. ቴሌግራምን ይክፈቱ እና የክፍያ ስክሪንሾት ወደ @egsmusic7 ይላኩ።",
-cbeNote:"ወደዚህ ሂሳብ ይላኩ፣ ከዚያ ቴሌግራምን ይክፈቱ እና ስክሪንሾቱን ወደ @egsmusic7 ይላኩ።",
-premium:"EGS ፕሪሚየም",perMonth:"99 ብር / በወር",perYear:"990 ብር / በዓመት",
-premNote:"ነጻ ማውረድ፡ እስከ 10 ዜማዎች። ፕሪሚየም ያልተገደበ ማውረድ እና ያለ ማስታወቂያ ይከፍታል። በቴሌብር ወይም CBE ከላይ ይክፈሉ፣ ከዚያ ስክሪንሾቱን በቴሌግራም ወደ @egsmusic7 ይላኩ — ፕሪሚየም በእጅ ይገብራል። እባክዎ ለክፍያ ማጽደቅ እስከ 48 ሰዓት ይጠብቁ።",
+support:"ESን ይደግፉ",telebirr:"ቴሌብር",cbe:"የCBE የባንክ ሂሳብ",copy:"ቅዳ",copied:"ተቀድቷል!",
+tbSteps:"1. የቴሌብር መተግበሪያዎን ይክፈቱ።\n2. ወደ 0902070153 (ዳዊት) ይላኩ።\n3. ቴሌግራምን ይክፈቱ እና የክፍያ ስክሪንሾት ወደ @egs_music_bot ይላኩ።",
+cbeNote:"ወደዚህ ሂሳብ ይላኩ፣ ከዚያ ቴሌግራምን ይክፈቱ እና ስክሪንሾቱን ወደ @egs_music_bot ይላኩ።",
+premium:"ES ፕሪሚየም",perMonth:"99 ብር / በወር",perYear:"990 ብር / በዓመት",
+premNote:"ነጻ ማውረድ፡ እስከ 10 ዜማዎች። ፕሪሚየም ያልተገደበ ማውረድ እና ያለ ማስታወቂያ ይከፍታል። በቴሌብር ወይም CBE ከላይ ይክፈሉ፣ ከዚያ ስክሪንሾቱን በቴሌግራም ወደ @egs_music_bot ይላኩ — ፕሪሚየም በእጅ ይገብራል። እባክዎ ለክፍያ ማጽደቅ እስከ 48 ሰዓት ይጠብቁ።",
 premActive:"ፕሪሚየም ነቅቷል",premStatus:"ፕሪሚየም ነቅቷል",daysLeft:"ቀናት ቀርተዋል",premOffline:"ማውረዶች በመተግበሪያው ውስጥ ይቀመጣሉ እና ያለኢንተርኔትም ይጫወታሉ።",premNeeded:"ይህ ዜማ ፕሪሚየም ይፈልጋል — ለማጫወት ያድሱ።",grantPrem:"ፕሪሚየም ስጥ",premEmailPh:"የተጠቃሚው ኢሜይል",prem30:"30 ቀናት",prem365:"1 ዓመት",premGranted:"ፕሪሚየም ተሰጥቷል",userNotFound:"በዚያ ኢሜይል መለያ አልተገኘም።",verifyTitle:"ኢሜይልዎን ይመልከቱ! 📧",verifySteps:"1. የኢሜይል መልእክት ሳጥንዎን ይክፈቱ\n2. የላክነውን የማረጋገጫ ሊንክ ይንኩ\n3. ወደዚህ ተመልሰው ይግቡ",resend:"ኢሜይል እንደገና ላክ",resent:"ኢሜይል እንደገና ተልኳል — መልእክት ሳጥንዎን ይመልከቱ!",backToLogin:"ወደ መግቢያ ተመለስ",
 privacy:"ግላዊነት",help:"እርዳታ",report:"ችግር ሪፖርት አድርግ",language:"ቋንቋ",
-privacyTxt:"EGS ተወዳጆችዎን፣ ዝርዝሮችዎን እና ቅንብሮችዎን በመሣሪያዎ ላይ ብቻ ያስቀምጣል። መለያ ከፈጠሩ፣ ኢሜይልዎ እና የሰቀሏቸው ዜማዎች በሰርቨሮቻችን ላይ በደህንነት ይቀመጣሉ እና ለማንም አይጋሩም።",
+privacyTxt:"ES ተወዳጆችዎን፣ ዝርዝሮችዎን እና ቅንብሮችዎን በመሣሪያዎ ላይ ብቻ ያስቀምጣል። መለያ ከፈጠሩ፣ ኢሜይልዎ እና የሰቀሏቸው ዜማዎች በሰርቨሮቻችን ላይ በደህንነት ይቀመጣሉ እና ለማንም አይጋሩም።",
 helpTxt:"በመነሻ ገጽ መዝሙራትን ያዳምጡ፣ ዜማዎችን ይፈልጉ፣ ልብ ምልክቱን በመንካት ተወዳጆችን ይቆጥቡ፣ እና የራስዎን ዝርዝሮች ይፍጠሩ። ማውረዶች ያለ ኢንተርኔት እንዲያዳምጡ ያስችሉዎታል። የራስዎን የወንጌል ዜማዎች ለመስቀል ይግቡ — እያንዳንዱ ስቀል ለሁሉም ከመታየቱ በፊት ይመረመራል።",
 localAudio:"ከመሣሪያዬ አጫውት",localNote:"ፋይሎች በዚህ ክፍለ ጊዜ ብቻ ይጫወታሉ።",chooseFiles:"የድምጽ ፋይሎች ምረጥ",
 download:"አውርድ",downloads:"ውርዶች",noDownloads:"ምንም ውርድ የለም — ⬇ ንካ ዜማ አስቀምጥ።",dlRemoved:"ውርዱ ተሰርዟል",dlDone:"ለኦፍላይን ማዳመጥ ተቀምጧል!",dlLimit:"የነጻ ማውረድ ገደብ (10) ደርሷል። ለተጨማሪ ፕሪሚየም ይሁኑ።",dlSignIn:"ዜማዎችን ለማውረድ ይግቡ።",
