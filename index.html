@@ -231,7 +231,15 @@ body.is-playing #fpCover{animation:none}
 #fpLyrics b{display:block;color:rgba(255,255,255,.7);font-size:13px;margin-bottom:6px}
 .shbtn svg{width:20px;height:20px}
 #offBanner{display:none;position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;z-index:70;background:#fff;color:#000;font:700 12px/1.3 system-ui,sans-serif;text-align:center;padding:calc(6px + env(safe-area-inset-top)) 10px 6px}
-#installRow{margin:4px 0 8px}
+#installRow{margin:10px 0 14px}
+.instCard{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#1ed760,#0e8f3c);color:#000;border-radius:14px;padding:12px 8px 12px 12px;box-shadow:0 6px 20px rgba(0,0,0,.35)}
+.instIco{width:40px;height:40px;border-radius:10px;background:rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center;flex:none}
+.instIco svg{width:22px;height:22px}
+.instTx{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25}
+.instTx b{font-size:15px}.instTx span{font-size:12px;opacity:.8}
+#installBtn{background:#000;color:#fff;border:0;border-radius:500px;font-family:inherit;font-weight:700;font-size:13px;padding:9px 16px;cursor:pointer;flex:none}
+#installX{background:none;border:0;color:#000;padding:6px;display:flex;cursor:pointer;opacity:.7;flex:none}
+#installX svg{width:16px;height:16px}
 .instPill{display:inline-flex;align-items:center;background:rgba(255,255,255,.14);border-radius:500px}
 .instPill button{display:flex;align-items:center;gap:7px;background:none;border:0;color:#fff;font-family:inherit;font-weight:700;font-size:13px;padding:9px 12px;cursor:pointer}
 .instPill svg{width:16px;height:16px}
@@ -248,7 +256,7 @@ body.is-playing #fpCover{animation:none}
   <main id="views">
     <section id="v-home" class="view">
       <h2 id="greet" style="font-size:24px;font-weight:800;margin:6px 0 2px"></h2>
-      <div id="installRow" style="display:none"><div class="instPill"><button id="installBtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 20h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="installTitle">Download the app</span></button><button id="installX" type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div><p id="installHint" class="muted" style="display:none;font-size:12px;margin:6px 4px 0"></p></div>
+      <div id="installRow" style="display:none"><div class="instCard"><div class="instIco"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 20h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="instTx"><b data-i18n="installTitle">Download the app</b><span data-i18n="installSub">Add ES to your home screen</span></div><button id="installBtn" type="button" data-i18n="install">Install</button><button id="installX" type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div><p id="installHint" class="muted" style="display:none;font-size:13px;margin:8px 4px 0"></p></div>
       <div class="sec-t"><span data-i18n="newUploads">New uploads</span></div>
       <div class="hrow" id="homeNewRow"></div>
       <div class="sec-t"><span data-i18n="playlists">Playlists</span></div>
@@ -694,6 +702,22 @@ audioEl.preload="auto";
 /* Silent preloader: warms up the NEXT track while the current one plays, so it starts instantly */
 const preloader = new Audio();
 preloader.preload="auto";
+/* Download the next song into memory so it starts instantly (the old hidden <audio> preloader never shared its data with the player) */
+let preBlob={id:null,url:null,busy:null}, curBlobUrl=null;
+function prefetchBlob(n){
+  if(!n||!n.url||preBlob.id===n.id||preBlob.busy===n.id) return;
+  if(preBlob.url){ try{URL.revokeObjectURL(preBlob.url);}catch(e){} preBlob.url=null; preBlob.id=null; }
+  preBlob.busy=n.id;
+  fetch(n.url).then(r=>{
+    if(!r.ok) throw new Error("http");
+    const len=+r.headers.get("content-length")||0;
+    if(len>45e6) throw new Error("big");
+    return r.blob();
+  }).then(b=>{
+    if(preBlob.busy!==n.id) return;
+    preBlob={id:n.id,url:URL.createObjectURL(b),busy:null};
+  }).catch(()=>{ if(preBlob.busy===n.id) preBlob.busy=null; try{ preloader.src=n.url; preloader.load(); }catch(e){} });
+}
 function preloadNext(){
   try{
     const list=Player.q, i=Player.i;
@@ -703,7 +727,7 @@ function preloadNext(){
     const go=url=>{ if(url && preloader.getAttribute("data-u")!==url){ preloader.setAttribute("data-u",url); preloader.src=url; } try{ preloader.load(); }catch(e){} };
     if(n.kind==="local"){ go(n.objUrl); return; }
     if(n._offUrl){ go(n._offUrl); return; }
-    OffDB.offlineUrl(n).then(u=>go(u||n.url)).catch(()=>go(n.url));
+    OffDB.offlineUrl(n).then(u=>{ if(u) go(u); else prefetchBlob(n); }).catch(()=>prefetchBlob(n));
   }catch(e){}
 }
 const Player = {
@@ -720,9 +744,15 @@ const Player = {
     OffDB.offlineUrl(s).then(offUrl=>{
       if(this.song()!==s) return;
       if(disabledIds.has(s.id)){ toast(t("premNeeded")); this.playing=false; syncPlayerUI(); return; }
-      const url = s.kind==="local" ? s.objUrl : (offUrl||s.url);
+      let url = s.kind==="local" ? s.objUrl : (offUrl||s.url);
+      if(s.kind!=="local" && !offUrl && preBlob.id===s.id && preBlob.url){
+        url=preBlob.url;
+        if(curBlobUrl && curBlobUrl!==url){ try{URL.revokeObjectURL(curBlobUrl);}catch(e){} }
+        curBlobUrl=url; preBlob={id:null,url:null,busy:null};
+      }
       if(audioEl.getAttribute("data-u")!==url){ audioEl.setAttribute("data-u",url); audioEl.src=url; }
-      try{ audioEl.load(); }catch(e){}
+      else { try{ audioEl.currentTime=0; }catch(e){} }
+      preloadNext();
       const tryPlay=()=>{
         let attempts=0;
         const onOK=()=>{ Player.playing=true; syncPlayerUI(); preloadNext(); };
@@ -796,6 +826,18 @@ let repeatOne=false;
 let resumeHandler=null;
 let shuffleOn=!!Store.get("egs_shuffle",false);
 let sleepTimerId=null, sleepEndAt=0, sleepAfterSong=false;
+audioEl.addEventListener("playing", ()=>{ preloadNext(); });
+/* stuck or broken stream: retry once from the same spot, then skip so music never just stops */
+let stallT=null, errRetried="";
+function clearStall(){ if(stallT){ clearTimeout(stallT); stallT=null; } }
+audioEl.addEventListener("waiting", ()=>{ clearStall(); stallT=setTimeout(()=>{
+  if(!Player.playing) return; const t0=audioEl.currentTime; try{ audioEl.load(); audioEl.currentTime=t0; audioEl.play().catch(()=>{}); }catch(e){} }, 10000); });
+["playing","pause","ended","canplaythrough"].forEach(ev=>audioEl.addEventListener(ev, clearStall));
+audioEl.addEventListener("error", ()=>{
+  const s=Player.song(); if(!s||!Player.playing) return;
+  if(errRetried!==s.id){ errRetried=s.id; const t0=audioEl.currentTime||0; try{ audioEl.load(); audioEl.currentTime=t0; audioEl.play().catch(()=>{}); }catch(e){} }
+  else { toast(t("errNet")); Player.next(); }
+});
 audioEl.addEventListener("ended", ()=>{
   if(sleepAfterSong){ sleepAfterSong=false; Player.playing=false; syncPlayerUI(); updateSleepUI(); toast(t("sleepStopped")); return; }
   if(repeatOne){ try{ audioEl.currentTime=0; audioEl.play().catch(()=>{}); }catch(e){} }
@@ -828,8 +870,14 @@ function syncPlayerUI(){
   $("#mpPlay").innerHTML=Player.playing?IC.pause:IC.play;
   const fp=$("#fp"); fp.style.background="linear-gradient(180deg,hsl("+(s.hue||hueFor(s.title))+",48%,32%),#121212 64%)";
   if(!fp.hidden){
-    $("#fpCover").style.cssText="background-image:url('"+(s.coverUrl?s.coverUrl.replace(/'/g,"%27"):"default-cover.png")+"');background-size:cover;background-position:center";
-    $("#fpCover").textContent="";
+    const fc=$("#fpCover"), grad=coverStyle(s.hue||hueFor(s.title)), letter=s.title.charAt(0).toUpperCase();
+    /* always show a big cover: the photo if it loads, otherwise a coloured tile with the first letter */
+    fc.style.cssText=grad; fc.textContent=letter;
+    if(s.coverUrl){
+      const im=new Image(); const sid=s.id;
+      im.onload=()=>{ const c=Player.song(); if(c&&c.id===sid){ fc.style.cssText="background-image:url('"+s.coverUrl.replace(/'/g,"%27")+"');background-size:cover;background-position:center"; fc.textContent=""; } };
+      im.src=s.coverUrl;
+    }
     $("#fpTitle").textContent=s.title; $("#fpArtist").textContent=s.worshiper?("🙏 "+s.worshiper):s.artist;
     $("#fpLyrics").innerHTML = s.lyrics ? "<b>"+esc(t("lyrics"))+"</b>\n"+esc(s.lyrics) : esc(t("noLyrics"));
     $("#fpPlayB").innerHTML=Player.playing?IC.pause:IC.play;
@@ -1689,7 +1737,7 @@ const isStandalone=()=>window.matchMedia("(display-mode: standalone)").matches||
 function installRow(){
   const row=$("#installRow"); if(!row) return;
   let hide=isStandalone();
-  try{ const x=+localStorage.getItem("egs_install_x")||0; if(x && Date.now()-x<30*864e5) hide=true; }catch(e){}
+  try{ const x=+localStorage.getItem("egs_install_x")||0; if(x && Date.now()-x<3*864e5) hide=true; }catch(e){}
   row.style.display=hide?"none":"block";
 }
 window.addEventListener("beforeinstallprompt",(e)=>{ e.preventDefault(); deferredPrompt=e; installRow(); });
