@@ -173,6 +173,13 @@ svg{fill:currentColor}
 #topbar{padding:calc(16px + env(safe-area-inset-top)) 16px 8px}
 .logo{width:40px;height:40px;border-radius:50%;background:none;padding:0}
 .logo svg{width:100%;height:100%}
+#hdrAvatar{width:40px;height:40px;border-radius:50%;border:none;background:linear-gradient(135deg,#1ed760,#0c9a47);color:#04150a;font-weight:800;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;padding:0}
+#hdrAvatar svg{width:22px;height:22px;fill:#04150a}
+#hdrAvatar{overflow:hidden}
+#hdrAvatar img{width:100%;height:100%;object-fit:cover;display:block}
+.avatarRow{display:flex;align-items:center;gap:12px;margin:12px 0 4px}
+.avatarPrev{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#1ed760,#0c9a47);color:#04150a;font-weight:800;font-size:22px;display:flex;align-items:center;justify-content:center;overflow:hidden;flex:none}
+.avatarPrev img{width:100%;height:100%;object-fit:cover}
 #topbar .tt b{font-size:20px;font-weight:800;letter-spacing:-.3px}
 #greet{font-size:28px!important;letter-spacing:-.5px}
 .sec-t{font-size:21px;font-weight:800;letter-spacing:-.3px;margin:24px 0 12px}
@@ -270,12 +277,12 @@ details.more>summary{cursor:pointer;font-weight:700;font-size:14px;padding:4px 0
 <body>
 <div id="phone">
   <header id="topbar">
-    <div class="logo"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#1ed760"/><g fill="#000"><rect x="9" y="17" width="4" height="10" rx="2"/><rect x="15" y="10" width="4" height="22" rx="2"/><rect x="21" y="14" width="4" height="14" rx="2"/><rect x="27" y="19" width="4" height="6" rx="2"/></g></svg></div>
-    <div class="tt"><b>ES</b><span data-i18n="tagline">Ethiopian Songs</span></div>
+    <button id="hdrAvatar" type="button" aria-label="Account"><span id="hdrAvatarIn"></span></button>
+    <div class="tt"><b id="hdrName">Account</b><span data-i18n="tagline">Ethiopian Songs</span></div>
   </header>
 
   <main id="views">
-    <section id="v-home" class="view">
+    <section id="v-home" class="view on">
       <h2 id="greet" style="font-size:24px;font-weight:800;margin:6px 0 2px"></h2>
       <div id="installRow" style="display:none"><div class="instCard"><div class="instIco"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 20h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="instTx"><b data-i18n="installTitle">Download the app</b><span data-i18n="installSub">Add ES to your home screen</span></div><button id="installBtn" type="button" data-i18n="install">Install</button><button id="installX" type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div><p id="installHint" class="muted" style="display:none;font-size:13px;margin:8px 4px 0"></p></div>
       <div class="sec-t"><span data-i18n="newUploads">New uploads</span></div>
@@ -392,7 +399,7 @@ favorites:"Favorites",noFav:"No favorites yet — tap the heart on any song.",
 newPlaylist:"New playlist",playlistName:"Playlist name",create:"Create",cancel:"Cancel",rename:"Rename",del:"Delete",
 addToPl:"Add to playlist",empty:"Empty",addedPl:"Added to playlist",plCreated:"Playlist created",plRenamed:"Playlist renamed",plDeleted:"Playlist deleted",
 addedFav:"Added to favorites",removedFav:"Removed from favorites",
-signIn:"Log in",signUp:"Create account",signOut:"Sign out",email:"Email",password:"Password",
+signIn:"Log in",signUp:"Create account",signOut:"Sign out",changePhoto:"Change photo",photoUpdated:"Profile photo updated",photoErr:"Couldn't update the photo. Try again.",email:"Email",password:"Password",
 needAccount:"New here? Create an account",haveAccount:"Have an account? Log in",authInHelp:"Welcome back! Use the email and password you registered with.",authUpHelp:"New here? Enter your email and choose a password to make a free account.",authWhy:"A free account lets you download songs and upload your own.",or:"or",contGoogle:"Continue with Google",errOAuth:"Couldn't start Google sign-in. Finish the Google setup in Supabase first.",
 uploadTitle:"Upload a song",fTitle:"Song title",fArtist:"Original artist",fWorshiper:"Worshiper (who sings this version)",fWorshiperPh:"Optional — leave empty if same as artist",fCover:"Cover picture (optional)",fDate:"Release date",fLyrics:"Lyrics (optional)",fAudio:"Audio file",fSubmit:"Upload",bulkTitle:"Bulk upload",bulkHelp:"Select many songs at once. Titles come from file names and songs go live right away. To give a song its own photo or lyrics, add a file with the same name — e.g. melkam-neh.mp3 + melkam-neh.jpg + melkam-neh.txt.",bulkArtist:"Original artist (for all songs)",bulkWorshiper:"Worshiper (for all songs, optional)",bulkPlaylist:"Save as playlist (optional)",bulkPlaylistPh:"Playlist name",bulkGo:"Upload all",bulkPhotos:"Cover photos (optional)",bulkLyrics:"Lyrics files .txt / .lrc (optional)",bulkProg:"Uploading",bulkDone:"All uploaded! They will appear after review.",
 myUploads:"My uploads",stPending:"Pending",stApproved:"Approved",stRejected:"Rejected",
@@ -424,7 +431,7 @@ favorites:"ተወዳጆች",noFav:"ገና ምንም ተወዳጅ የለም — �
 newPlaylist:"አዲስ ዝርዝር",playlistName:"የዝርዝሩ ስም",create:"ፍጠር",cancel:"ተወው",rename:"እንደገና ሰይም",del:"ሰርዝ",
 addToPl:"ወደ ዝርዝር ጨምር",empty:"ባዶ",addedPl:"ወደ ዝርዝር ታክሏል",plCreated:"ዝርዝር ተፈጥሯል",plRenamed:"ዝርዝሩ ተቀይሯል",plDeleted:"ዝርዝሩ ተሰርዟል",
 addedFav:"ወደ ተወዳጆች ታክሏል",removedFav:"ከተወዳጆች ተሰርዟል",
-signIn:"ግባ",signUp:"መለያ ፍጠር",signOut:"ውጣ",email:"ኢሜይል",password:"የይለፍ ቃል",
+signIn:"ግባ",signUp:"መለያ ፍጠር",signOut:"ውጣ",changePhoto:"ፎቶ ቀይር",photoUpdated:"የመገለጫ ፎቶ ተቀይሯል",photoErr:"ፎቶውን መቀየር አልተቻለም። እንደገና ይሞክሩ።",email:"ኢሜይል",password:"የይለፍ ቃል",
 needAccount:"አዲስ ነዎት? መለያ ይፍጠሩ",haveAccount:"መለያ አለዎት? ይግቡ",authInHelp:"እንኳን ደህና መጡ! የተመዘገቡበትን ኢሜይል እና የይለፍ ቃል ይጠቀሙ።",authUpHelp:"አዲስ ነዎት? ኢሜይልዎን ያስገቡ እና የይለፍ ቃል ይምረጡ።",authWhy:"ነጻ መለያ ዜማዎችን እንዲያወርዱ እና የራስዎን እንዲሰቅሉ ያስችልዎታል።",or:"ወይም",contGoogle:"በGoogle ይቀጥሉ",errOAuth:"በGoogle መግባት አልተቻለም። በመጀመሪያ በSupabase የGoogle ማዋቀርን ይጨርሱ።",
 uploadTitle:"ዜማ ስቀል",fTitle:"የዜማ ርዕስ",fArtist:"ኦሪጅናል አርቲስት",fWorshiper:"አምልኮ (ይህን ስሪት የሚዘምር)",fWorshiperPh:"አማራጭ — እንደ አርቲስት ከሆነ ባዶ ተው",fCover:"የሽፋን ስዕል (አማራጭ)",fDate:"የወጣበት ቀን",fLyrics:"ግጥም (አማራጭ)",fAudio:"የድምጽ ፋይል",fSubmit:"ስቀል",bulkTitle:"ብዙ ዜማዎች ስቀል",bulkHelp:"ብዙ ዜማዎችን በአንድ ጊዜ ይምረጡ። ርእሶች ከፋይል ስሞች ይመጣሉ እና ዜማዎቹ ወዲያውኑ ይታያሉ። ለዜማ የራሱ ፎቶ ወይም ግጥም ለመስጠት፣ ተመሳሳይ ስም ያለው ፋይል ይጨምሩ — ለምሳሌ melkam-neh.mp3 + melkam-neh.jpg + melkam-neh.txt።",bulkArtist:"ኦሪጅናል አርቲስት (ለሁሉም ዜማዎች)",bulkWorshiper:"አምልኮ (ለሁሉም ዜማዎች, አማራጭ)",bulkPlaylist:"እንደ ዝርዝር አስቀምጥ (አማራጭ)",bulkPlaylistPh:"የዝርዝር ስም",bulkGo:"ሁሉንም ስቀል",bulkPhotos:"የሽፋን ፎቶዎች (አማራጭ)",bulkLyrics:"የግጥም ፋይሎች .txt / .lrc (አማራጭ)",bulkProg:"በመስቀል ላይ",bulkDone:"ሁሉም ተቀምጧል! ከግምገማ በኋላ ይታያሉ።",
 myUploads:"የእኔ ስቅሎች",stPending:"በጥበቃ ላይ",stApproved:"ተቀብሏል",stRejected:"ውድቅ ተደርጓል",
@@ -977,6 +984,7 @@ function switchTab(name){
   if(name==="account") renderAccount();
 }
 $$("#tabbar button").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.tab)));
+$("#hdrAvatar").addEventListener("click",()=>switchTab("account"));
 
 /* ================= UI: SONG ROWS ================= */
 function songRow(s, queue, idx){
@@ -1361,7 +1369,16 @@ function renderNotifsBox(){
 
 /* ================= ACCOUNT TAB ================= */
 let authMode="up";
-function renderAccount(){ renderAuth(); renderUploadBox(); renderMyUploadsBox(); renderNotifsBox(); renderAdminBox(); renderPremBox(); renderExtrasBox(); }
+function renderHeaderUser(){
+  const av=$("#hdrAvatarIn"), nm=$("#hdrName"); if(!av||!nm) return;
+  const p=S.profile, u=S.user;
+  const name=((p&&(p.display_name||p.email))||(u&&u.email)||"").trim();
+  nm.textContent=name?((p&&p.display_name)||name):t("account");
+  if(p&&p.avatar_url){ av.innerHTML='<img src="'+esc(p.avatar_url)+'" alt="">'; }
+  else if(name){ av.textContent=name.charAt(0).toUpperCase(); }
+  else { av.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>'; }
+}
+function renderAccount(){ renderHeaderUser(); renderAuth(); renderUploadBox(); renderMyUploadsBox(); renderNotifsBox(); renderAdminBox(); renderPremBox(); renderExtrasBox(); }
 
 function renderAuth(){
   const box=$("#authBox"); box.innerHTML="";
@@ -1373,6 +1390,15 @@ function renderAuth(){
       +'<div class="kv"><span>'+t("signUp")+'</span><b>'+esc((S.profile&&S.profile.display_name)||"—")+'</b></div>';
     const out=document.createElement("button"); out.className="btn ghost"; out.textContent=t("signOut");
     out.addEventListener("click",async()=>{ await supa.auth.signOut(); S.user=null;S.profile=null;S.myUploads=[];S.pending=[];S.notifs=[];serverDl=null; isPremium=false; Store.set("egs_prem_until",0); await refreshDisabled(); renderAccount(); toast(t("signedOut")); });
+    const prow=document.createElement("div"); prow.className="avatarRow";
+    prow.innerHTML='<span class="avatarPrev" id="accAvatarPrev"></span><button class="btn ghost" id="accPhotoBtn" type="button">'+t("changePhoto")+'</button><input type="file" id="accPhotoFile" accept="image/*" style="display:none">';
+    const prev=prow.querySelector("#accAvatarPrev");
+    if(S.profile&&S.profile.avatar_url) prev.innerHTML='<img src="'+esc(S.profile.avatar_url)+'" alt="">';
+    else { const nm2=(((S.profile&&(S.profile.display_name||S.profile.email))||S.user.email||"?")+"").trim(); prev.textContent=nm2.charAt(0).toUpperCase(); }
+    const pfile=prow.querySelector("#accPhotoFile");
+    prow.querySelector("#accPhotoBtn").addEventListener("click",()=>pfile.click());
+    pfile.addEventListener("change",()=>{ if(pfile.files&&pfile.files[0]) changeAvatar(pfile.files[0]); });
+    d.appendChild(prow);
     d.appendChild(out); box.appendChild(d); return;
   }
   const d=document.createElement("div"); d.className="card";
@@ -1457,6 +1483,39 @@ async function uploadFileProgress(bucket, path, file, onProgress){
     }catch(e){ reject(e); }
   });
 }
+function downscaleImage(file,size){
+  return new Promise((resolve,reject)=>{
+    const url=URL.createObjectURL(file); const img=new Image();
+    img.onload=()=>{ try{
+      const sc=Math.min(1,size/Math.max(img.width,img.height));
+      const c=document.createElement("canvas");
+      c.width=Math.max(1,Math.round(img.width*sc)); c.height=Math.max(1,Math.round(img.height*sc));
+      c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+      URL.revokeObjectURL(url);
+      c.toBlob(b=>b?resolve(b):reject(new Error("img")),"image/jpeg",0.85);
+    }catch(e){ reject(e); } };
+    img.onerror=()=>{ URL.revokeObjectURL(url); reject(new Error("img")); };
+    img.src=url;
+  });
+}
+async function changeAvatar(file){
+  if(!file||!S.user||!supa) return;
+  try{
+    toast("\u23f3 "+t("uploading"));
+    const blob=await downscaleImage(file,256);
+    const path=S.user.id+"/avatar_"+Date.now()+".jpg";
+    await uploadFileProgress("avatars",path,new File([blob],"avatar.jpg",{type:"image/jpeg"}),null);
+    const url=supa.storage.from("avatars").getPublicUrl(path).data.publicUrl;
+    const {error}=await supa.rpc("set_my_avatar",{p_url:url});
+    if(error) throw error;
+    const old=S.profile&&S.profile.avatar_url;
+    if(S.profile) S.profile.avatar_url=url;
+    if(old){ try{ const op=old.split("/avatars/")[1]; if(op&&op!==path) await supa.storage.from("avatars").remove([op.split("?")[0]]); }catch(_){}}
+    renderHeaderUser(); renderAuth();
+    toast(t("photoUpdated"));
+  }catch(e){ toast(t("photoErr")); }
+}
+
 /* ================= ARTISTS: APPLY, VERIFY, UPLOAD ================= */
 const MAX_AUDIO_MB = 50;
 /* true  = verified artists publish instantly (admins can still delete songs)
