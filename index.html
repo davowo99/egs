@@ -903,7 +903,7 @@ function syncPlayerUI(){
       im.onload=()=>{ const c=Player.song(); if(c&&c.id===sid){ fc.style.cssText="background-image:url('"+cssUrl(s.coverUrl)+"');background-size:cover;background-position:center"; fc.textContent=""; } };
       im.src=s.coverUrl;
     }
-    $("#fpTitle").textContent=s.title; $("#fpArtist").textContent=s.worshiper?("🙏 "+s.worshiper):s.artist;
+    $("#fpTitle").textContent=s.title; $("#fpArtist").textContent=s.worshiper?(s.worshiper):s.artist;
     $("#fpLyrics").innerHTML = s.lyrics ? "<b>"+esc(t("lyrics"))+"</b>\n"+esc(s.lyrics) : esc(t("noLyrics"));
     $("#fpPlayB").innerHTML=Player.playing?IC.pause:IC.play;
     $("#fpFav").innerHTML=heart(favs.includes(s.id));
@@ -984,7 +984,7 @@ function songRow(s, queue, idx){
   const locked=disabledIds.has(s.id);
   if(locked) b.style.opacity=".45";
   b.innerHTML='<div class="cover" style="'+(s.coverUrl?'background-image:url(\''+esc(cssUrl(s.coverUrl))+'\');background-size:cover;background-position:center':coverStyle(s.hue||hueFor(s.title)))+'">'+(s.coverUrl?'':esc(s.title.charAt(0).toUpperCase()))+'</div>'
-    +'<div class="mi"><b>'+esc(s.title)+(locked?' 🔒':'')+'</b><span data-act="artist" style="text-decoration:underline dotted;text-underline-offset:3px">'+(s.worshiper?'🙏 '+esc(s.worshiper):esc(s.artist))+'</span></div>'
+    +'<div class="mi"><b>'+esc(s.title)+(locked?' 🔒':'')+'</b><span data-act="artist" style="text-decoration:underline dotted;text-underline-offset:3px">'+(s.worshiper?esc(s.worshiper):esc(s.artist))+'</span></div>'
     +'<span class="icobtn '+(favs.includes(s.id)?"fav":"")+'" data-act="fav">'+heart(favs.includes(s.id))+'</span>'
     +'<span class="icobtn" data-act="dl">'+IC.dl+'</span>'
     +'<span class="icobtn" data-act="more">'+IC.more+'</span>';
