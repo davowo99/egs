@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Hisab Till</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { font-family:-apple-system,'Segoe UI',Roboto,sans-serif; background:#071f14; color:#eafff2; padding:14px 14px 34px; }
+  .head { display:flex; align-items:center; gap:12px; background:linear-gradient(135deg,#0d3520,#0a2a19); border:1px solid #175732; border-radius:18px; padding:13px 14px; }
+  .logo { width:46px; height:46px; border-radius:13px; background:#0f5132; display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:900; color:#2fe673; border:1px solid #1d7a46; flex:none; }
+  .shopname { font-size:17.5px; font-weight:800; line-height:1.2; }
+  .subline { font-size:12.5px; color:#9fd8b4; margin-top:2px; }
+  .langbtn { margin-left:auto; background:#0a2a19; color:#7dffab; border:1px solid #1d7a46; font-size:12.5px; font-weight:800; padding:8px 11px; border-radius:999px; flex:none; cursor:pointer; }
+  .tiles { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+  .tile { position:relative; background:#0d3520; border:1px solid #175732; border-radius:16px; padding:16px 12px; text-align:left; color:#eafff2; cursor:pointer; }
+  .tile:active { background:#14532d; }
+  .tile .nm { font-size:16.5px; font-weight:800; display:block; }
+  .tile .pr { font-size:13px; color:#9fd8b4; display:block; margin-top:3px; }
+  .tile .bdg { position:absolute; top:8px; right:8px; background:#2fe673; color:#04331a; font-size:12.5px; font-weight:900; min-width:24px; height:24px; border-radius:999px; display:none; align-items:center; justify-content:center; padding:0 6px; }
+  .card { background:#0d3520; border:1px solid #175732; border-radius:16px; padding:14px; margin-top:12px; }
+  .card h3 { font-size:14.5px; margin-bottom:8px; color:#d9ffe6; }
+  .line { display:flex; align-items:center; gap:8px; padding:7px 0; border-bottom:1px solid #12402a; font-size:14.5px; }
+  .line:last-child { border-bottom:none; }
+  .line .nm { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .line .amt { margin-left:auto; font-weight:700; white-space:nowrap; }
+  .step { display:flex; align-items:center; gap:6px; flex:none; }
+  .step button { width:30px; height:30px; border-radius:10px; border:1px solid #1d7a46; background:#0a2a19; color:#7dffab; font-size:16px; font-weight:900; cursor:pointer; }
+  .step .q { min-width:20px; text-align:center; font-weight:800; }
+  .totalrow { display:flex; align-items:center; font-size:17px; font-weight:800; padding-top:10px; }
+  .totalrow .amt { margin-left:auto; color:#7dffab; font-size:20px; }
+  .custom { display:flex; gap:8px; margin-top:12px; }
+  .custom input { flex:1; background:#0a2a19; border:1px solid #1d7a46; border-radius:12px; color:#eafff2; padding:12px; font-size:15px; min-width:0; }
+  .custom button { background:#14532d; color:#7dffab; border:1px solid #1d7a46; border-radius:12px; padding:12px 16px; font-weight:800; font-size:14.5px; cursor:pointer; }
+  .pays { display:flex; gap:9px; margin-top:12px; }
+  .pays button { flex:1; border:none; border-radius:13px; padding:15px 6px; font-size:15px; font-weight:800; cursor:pointer; background:#2fe673; color:#04331a; }
+  .pays button:disabled { opacity:.35; }
+  .row2 { display:flex; gap:9px; margin-top:10px; }
+  .row2 button { flex:1; background:#0d3520; color:#7dffab; border:1px solid #1d7a46; border-radius:13px; padding:12px; font-size:14px; font-weight:800; cursor:pointer; }
+  .entry { display:flex; gap:9px; padding:6px 0; border-bottom:1px solid #12402a; font-size:13.5px; }
+  .entry:last-child { border-bottom:none; }
+  .entry .amt { margin-left:auto; font-weight:700; }
+  .entry .tm { color:#9fd8b4; font-size:12px; }
+  .msg { text-align:center; color:#9fd8b4; padding:42px 18px; font-size:15px; line-height:1.6; }
+  .flash { position:fixed; inset:0; background:rgba(4,40,20,.93); display:none; align-items:center; justify-content:center; flex-direction:column; z-index:9; }
+  .flash .big { font-size:64px; }
+  .flash .txt { font-size:19px; font-weight:800; margin-top:8px; }
+  .foot { text-align:center; color:#5f9c76; font-size:11.5px; margin-top:18px; }
+</style>
+</head>
+<body>
+<div id="app"><div class="msg">⏳ በመጫን ላይ…<br>Loading the till…</div></div>
+<div class="flash" id="flash"><div class="big">✅</div><div class="txt" id="flashTxt"></div></div>
+<div class="foot">Hisab ሂሳብ · Till መሸጫ</div>
+
+<script>
+var tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+var API_URL = 'https://xhstkljqhulkkwfrwqpv.supabase.co/functions/v1/swift-action';
+var L = {
+  am: { till:'መሸጫ', my:'ዛሬ እኔ', sales:'ሽያጭ', total:'ጠቅላላ', order:'ትእዛዝ', empty:'ገና ምንም አልተመረጠም — እቃ ይንኩ', cash:'💵 ጥሬ ገንዘብ', tele:'📱 ቴሌብር', cbe:'🏦 CBE', custom:'ሌላ መጠን…', add:'ጨምር', undo:'↩️ የመጨረሻውን ሰርዝ', recent:'የኔ የዛሬ መዝገቦች', saved:'ተመዝግቧል', other:'ሽያጭ', loading:'በመጫን ላይ…' },
+  en: { till:'Till', my:'Me today', sales:'sales', total:'Total', order:'Order', empty:'Nothing yet — tap an item', cash:'💵 Cash', tele:'📱 Telebirr', cbe:'🏦 CBE', custom:'Other amount…', add:'Add', undo:'↩️ Undo last', recent:'My entries today', saved:'Saved', other:'Sale', loading:'Loading…' }
+};
+var lang = 'am', items = [], cart = {}, customSeq = 0, lastPay = 'cash', myToday = { count: 0, total: 0 }, recent = [], shopName = '';
+function S() { return L[lang]; }
+function fmt(n) { return Number(n || 0).toLocaleString('en-US') + ' ብር'; }
+function esc(s) { return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fail() { document.getElementById('app').innerHTML = '<div class="msg">🔒 ይህ ገጽ ከሂሳብ ቦት ውስጥ ብቻ ይከፈታል።<br>Open the Till from inside the Hisab bot.</div>'; }
+function api(body, done) {
+  body.initData = tg ? tg.initData : '';
+  body.app = 'till';
+  fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+    .then(function (r) { return r.json(); }).then(done)
+    .catch(function () { if (tg) tg.showPopup({ message: '⚠️ Connection failed' }); });
+}
+function cartList() { var out = []; for (var k in cart) if (cart[k].qty > 0) out.push(cart[k]); return out; }
+function cartTotal() { var t = 0, l = cartList(); for (var i = 0; i < l.length; i++) t += l[i].unit * l[i].qty; return t; }
+function addItem(i) { var k = 'i' + i; if (!cart[k]) cart[k] = { key: k, name: items[i].n, unit: Number(items[i].p), qty: 0 }; cart[k].qty = Math.min(50, cart[k].qty + 1); render(); }
+function addCustom() {
+  var inp = document.getElementById('customAmt'), v = parseFloat(String(inp.value).replace(/,/g, ''));
+  if (!v || v <= 0) return;
+  customSeq++; var k = 'c' + customSeq;
+  cart[k] = { key: k, name: S().other, unit: Math.round(v * 100) / 100, qty: 1 };
+  inp.value = ''; render();
+}
+function chQty(k, d) { if (!cart[k]) return; cart[k].qty += d; if (cart[k].qty <= 0) delete cart[k]; if (cart[k] && cart[k].qty > 50) cart[k].qty = 50; render(); }
+function save(pay) {
+  var lines = cartList(); if (!lines.length) return;
+  var simple = [];
+  for (var i = 0; i < lines.length; i++) simple.push({ name: lines[i].name, unit: lines[i].unit, qty: lines[i].qty });
+  api({ action: 'order', lines: simple, pay: pay }, function (r) {
+    if (r && r.ok) {
+      cart = {}; myToday = r.myToday; recent = r.recent; lastPay = pay;
+      var f = document.getElementById('flash');
+      document.getElementById('flashTxt').textContent = S().saved + ' · ' + fmt(r.total);
+      f.style.display = 'flex';
+      setTimeout(function () { f.style.display = 'none'; }, 1100);
+      render();
+    } else if (tg) tg.showPopup({ message: '⚠️ ' + S().saved + ' ✗' });
+  });
+}
+function undo() {
+  api({ action: 'undo' }, function (r) { if (r && r.ok) { myToday = r.myToday; recent = r.recent; render(); } });
+}
+function render() {
+  var s = S(), h = '';
+  h += '<div class="head"><div class="logo">ሂ</div><div><div class="shopname">' + esc(shopName) + '</div>'
+     + '<div class="subline">🧾 ' + s.till + ' · ' + s.my + ': ' + myToday.count + ' ' + s.sales + ' · ' + fmt(myToday.total) + '</div></div>'
+     + '<button class="langbtn" id="langBtn">' + (lang === 'am' ? 'EN' : 'አማ') + '</button></div>';
+  h += '<div class="tiles">';
+  for (var i = 0; i < items.length; i++) {
+    var c = cart['i' + i] ? cart['i' + i].qty : 0;
+    h += '<button class="tile" onclick="addItem(' + i + ')"><span class="nm">' + esc(items[i].n) + '</span><span class="pr">' + fmt(items[i].p) + '</span><span class="bdg" style="display:' + (c ? 'flex' : 'none') + '">' + c + '</span></button>';
+  }
+  h += '</div>';
+  h += '<div class="card"><h3>🧾 ' + s.order + '</h3>';
+  var lines = cartList();
+  if (!lines.length) h += '<div style="color:#9fd8b4;font-size:13.5px;padding:4px 0">' + s.empty + '</div>';
+  for (var j = 0; j < lines.length; j++) {
+    var ln = lines[j];
+    h += '<div class="line"><span class="nm">' + esc(ln.name) + '</span><span class="step"><button onclick="chQty(\'' + ln.key + '\',-1)">−</button><span class="q">' + ln.qty + '</span><button onclick="chQty(\'' + ln.key + '\',1)">+</button></span><span class="amt">' + fmt(ln.unit * ln.qty) + '</span></div>';
+  }
+  h += '<div class="custom"><input id="customAmt" type="number" inputmode="decimal" placeholder="' + s.custom + '"><button onclick="addCustom()">' + s.add + '</button></div>';
+  h += '<div class="totalrow"><span>' + s.total + '</span><span class="amt">' + fmt(cartTotal()) + '</span></div>';
+  var dis = lines.length ? '' : ' disabled';
+  h += '<div class="pays"><button onclick="save(\'cash\')"' + dis + '>' + s.cash + (lastPay === 'cash' ? ' ✓' : '') + '</button>'
+     + '<button onclick="save(\'telebirr\')"' + dis + '>' + s.tele + (lastPay === 'telebirr' ? ' ✓' : '') + '</button>'
+     + '<button onclick="save(\'cbe\')"' + dis + '>' + s.cbe + (lastPay === 'cbe' ? ' ✓' : '') + '</button></div>';
+  h += '<div class="row2"><button onclick="undo()">' + s.undo + '</button></div></div>';
+  if (recent.length) {
+    h += '<div class="card"><h3>📋 ' + s.recent + '</h3>';
+    for (var m = 0; m < recent.length; m++) {
+      h += '<div class="entry"><span>🟢</span><span>' + esc(recent[m].details) + '</span><span class="amt">' + fmt(recent[m].amount) + '</span><span class="tm">' + esc(recent[m].time) + '</span></div>';
+    }
+    h += '</div>';
+  }
+  document.getElementById('app').innerHTML = h;
+  document.getElementById('langBtn').onclick = function () { lang = lang === 'am' ? 'en' : 'am'; render(); };
+}
+if (tg) { tg.ready(); tg.expand(); }
+if (!tg || !tg.initData) fail();
+else api({}, function (r) {
+  if (!r || !r.ok) { fail(); return; }
+  shopName = r.shop.name; items = r.items || []; lastPay = r.lastPay || 'cash';
+  myToday = r.myToday; recent = r.recent || [];
+  if (r.lang === 'en') lang = 'en';
+  render();
+});
+</script>
+</body>
+</html>
